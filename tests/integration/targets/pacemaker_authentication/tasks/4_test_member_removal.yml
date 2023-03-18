@@ -1,0 +1,89 @@
+# Copyright 2023, Rhys Campbell <rhyscampbell@bluewin.ch>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+- vars:
+    pacemaker_params: &pacemaker_params
+      username: hacluster
+      password: ChangeToVaultP@55w0rd_
+      members:
+        - "amazonlinux1.pacemaker"
+        - "amazonlinux2.pacemaker"
+      state: present
+      debug: yes
+
+  block:
+
+    - name: Copy test pcs tokens file to host
+      copy:
+        content: |
+          {
+              "format_version": 3,
+              "data_version": 2,
+              "tokens": {
+                  "amazonlinux1.pacemaker": "bff36ce9-13f4-4589-943e-dfaea6c3d98c",
+                  "amazonlinux2.pacemaker": "28287431-4879-47bd-96d3-6a07726820a2",
+                  "amazonlinux3.pacemaker": "c9f46b63-85b7-4438-860b-54019e55745b"
+              },
+              "ports": {
+                  "amazonlinux1.pacemaker": 2224,
+                  "amazonlinux2.pacemaker": 2224,
+                  "amazonlinux3.pacemaker": 2224
+              }
+          }
+        dest: /var/lib/pcsd/tokens
+
+    - assert:
+        that:
+          - "'amazonlinux1.pacemaker' in {{ lookup('ansible.builtin.file', '/var/lib/pcsd/tokens') }}['tokens']"
+          - "'amazonlinux2.pacemaker' in {{ lookup('ansible.builtin.file', '/var/lib/pcsd/tokens') }}['tokens']"
+          - "'amazonlinux3.pacemaker' in {{ lookup('ansible.builtin.file', '/var/lib/pcsd/tokens') }}['tokens']"
+
+    - name: Removal one members (check mode)
+      community.pacemaker.pacemaker_authentication:
+        <<: *pacemaker_params
+      check_mode: yes
+      register: remove_test
+
+    - assert:
+        that:
+          - remove_test.changed
+          - remove_test.msg == "The following members were removed amazonlinux3.pacemaker"
+
+    - assert:
+        that:
+          - "'amazonlinux1.pacemaker' in {{ lookup('ansible.builtin.file', '/var/lib/pcsd/tokens') }}['tokens']"
+          - "'amazonlinux2.pacemaker' in {{ lookup('ansible.builtin.file', '/var/lib/pcsd/tokens') }}['tokens']"
+          - "'amazonlinux3.pacemaker' in {{ lookup('ansible.builtin.file', '/var/lib/pcsd/tokens') }}['tokens']"
+
+    - name: Removal one member only
+      community.pacemaker.pacemaker_authentication:
+        <<: *pacemaker_params
+      check_mode: no
+      register: remove_test
+
+    - assert:
+        that:
+          - "'amazonlinux1.pacemaker' in {{ lookup('ansible.builtin.file', '/var/lib/pcsd/tokens') }}['tokens']"
+          - "'amazonlinux2.pacemaker' in {{ lookup('ansible.builtin.file', '/var/lib/pcsd/tokens') }}['tokens']"
+          - "'amazonlinux3.pacemaker' not in {{ lookup('ansible.builtin.file', '/var/lib/pcsd/tokens') }}['tokens']"
+
+    - assert:
+        that:
+          - remove_test.changed
+          - remove_test.msg == "The following members were removed amazonlinux3.pacemaker"
+
+    - name: Removal one member - again, no change
+      community.pacemaker.pacemaker_authentication:
+        <<: *pacemaker_params
+      check_mode: no
+      register: remove_test
+
+    - assert:
+        that:
+          - remove_test.changed == False
+          - remove_test.msg == "All members have tokens in /var/lib/pcsd/tokens"   
+
+    - assert:
+        that:
+          - "'amazonlinux1.pacemaker' in {{ lookup('ansible.builtin.file', '/var/lib/pcsd/tokens') }}['tokens']"
+          - "'amazonlinux2.pacemaker' in {{ lookup('ansible.builtin.file', '/var/lib/pcsd/tokens') }}['tokens']"
+          - "'amazonlinux3.pacemaker' not in {{ lookup('ansible.builtin.file', '/var/lib/pcsd/tokens') }}['tokens']"

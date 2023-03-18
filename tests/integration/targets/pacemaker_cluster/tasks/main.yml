@@ -1,0 +1,3 @@
+---
+# main tasks file
+- import_tasks: 1_test_setup_cluster.yml

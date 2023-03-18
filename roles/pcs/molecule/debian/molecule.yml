@@ -1,0 +1,42 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+  options:
+    config-data:
+      line-length: disable
+platforms:
+  - name: debian1
+    image: debian:stretch
+    command: /sbin/init
+    privileged: True
+    networks:
+      - name: pacemaker
+    network_mode: pacemaker
+  - name: debian2
+    image: debian:stretch
+    command: /sbin/init
+    privileged: True
+    networks:
+      - name: pacemaker
+    network_mode: pacemaker
+  - name: debian3
+    image: debian:stretch
+    command: /sbin/init
+    privileged: True
+    networks:
+      - name: pacemaker
+    network_mode: pacemaker
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
+    options:
+      ignore: 'E501'

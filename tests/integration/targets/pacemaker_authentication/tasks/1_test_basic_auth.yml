@@ -1,0 +1,46 @@
+# Copyright 2023, Rhys Campbell <rhyscampbell@bluewin.ch>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+- vars:
+    pacemaker_params: &pacemaker_params
+      username: hacluster
+      password: ChangeToVaultP@55w0rd_
+      members:
+        - localhost
+      state: present   
+
+  block:
+
+    - name: Simple test with localhost (check mode)
+      community.pacemaker.pacemaker_authentication:
+        <<: *pacemaker_params
+      check_mode: yes
+      register: simple_test
+
+    - assert:
+        that:
+          - simple_test.changed
+          - simple_test.msg == "All provided members were authenticated"
+
+    - name: Simple test with localhost
+      community.pacemaker.pacemaker_authentication:
+        <<: *pacemaker_params
+      register: simple_test
+
+    - assert:
+        that:
+          - simple_test.changed
+          - simple_test.msg == "All provided members were authenticated"
+
+    - name: Simple test with localhost - should not change
+      community.pacemaker.pacemaker_authentication:
+        <<: *pacemaker_params
+      register: simple_test
+
+    - assert:
+        that:
+          - simple_test.changed == False
+          - simple_test.msg == "All members have tokens in /var/lib/pcsd/tokens"
+
+
+
+

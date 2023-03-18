@@ -1,0 +1,67 @@
+# Copyright 2023, Rhys Campbell <rhyscampbell@bluewin.ch>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+- vars:
+    pacemaker_params: &pacemaker_params
+      username: hacluster
+      password: ChangeToVaultP@55w0rd_
+      state: absent
+      debug: yes
+
+  block:
+
+    - name: Removal (check mode)
+      community.pacemaker.pacemaker_authentication:
+        <<: *pacemaker_params
+      check_mode: yes
+      register: simple_test
+      
+    - assert:
+        that:
+          - simple_test.changed
+          - simple_test.msg == "The pcsd tokens file has been removed /var/lib/pcsd/tokens"
+
+    - name: Check file still exists
+      ansible.builtin.stat:
+        path: /var/lib/pcsd/tokens
+      register: token_file
+
+    - assert:
+        that:
+          - token_file.stat.exists
+
+    - name: Removal
+      community.pacemaker.pacemaker_authentication:
+        <<: *pacemaker_params
+      check_mode: no
+      register: simple_test
+      
+    - assert:
+        that:
+          - simple_test.changed
+          - simple_test.msg == "The pcsd tokens file has been removed /var/lib/pcsd/tokens"
+
+    - name: Check file does not exist
+      ansible.builtin.stat:
+        path: /var/lib/pcsd/tokens
+      register: token_file
+
+    - assert:
+        that:
+          - token_file.stat.exists == False
+
+    - name: Removal - should be no change
+      community.pacemaker.pacemaker_authentication:
+        <<: *pacemaker_params
+      check_mode: no
+      register: simple_test
+      
+    - assert:
+        that:
+          - simple_test.changed == False
+          - simple_test.msg == "The pcsd tokens file has not been configured /var/lib/pcsd/tokens"
+
+
+
+    
+
+   

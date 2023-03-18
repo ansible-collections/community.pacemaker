@@ -1,0 +1,11 @@
+---
+# main tasks file
+- import_tasks: 1_test_basic_auth.yml
+
+- import_tasks: 2_test_basic_absent.yml
+
+- import_tasks: 3_test_bad_module_call.yml
+
+- import_tasks: 4_test_member_removal.yml
+
+- import_tasks: 5_test_member_addition.yml
