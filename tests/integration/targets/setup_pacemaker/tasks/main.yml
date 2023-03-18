@@ -1,0 +1,3 @@
+---
+- name: Import tasks from pcs role
+  import_tasks: "{{ playbook_dir }}../../../../../../../../roles/pcs/tasks/main.yml"

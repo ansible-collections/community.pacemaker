@@ -1,0 +1,25 @@
+---
+# tasks file for pcs
+- name: Install pacemaker packages
+  package:
+    name:
+      - pcs
+      - pacemaker
+      #- cman
+      #- fence-agents
+      #- lvm2-cluster
+      #- gfs2-utils
+
+# ChangeToVaultP@55w0rd_
+- name: Create the hacluster user
+  user:
+    name: hacluster
+    comment: User for the Pacemaker software
+    password: $6$V8GTXhwF8739PPUv$uvg.hPSNk8vCEJJ2tLCqihhSsODVbFymQuyux5zhbDCKcPgZqEX5sT97ECioWSgxvDDoEKJOs7kchqFVLy0mK1
+    shell: /bin/bash 
+
+- name: Start the pcsd service
+  service:
+    name: pcsd
+    state: started
+    enabled: yes

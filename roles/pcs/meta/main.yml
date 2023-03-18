@@ -1,0 +1,9 @@
+---
+galaxy_info:
+  author: Rhys Campbell
+  license: license (GPLv2, CC-BY, etc)
+  min_ansible_version: 2.13
+  galaxy_tags:
+    - pacemaker
+    - pcs
+    - redhat

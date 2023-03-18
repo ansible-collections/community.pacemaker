@@ -1,0 +1,21 @@
+# Copyright 2023, Rhys Campbell <rhyscampbell@bluewin.ch>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+- vars:
+    pacemaker_params: &pacemaker_params
+      username: hacluster
+      password: ChangeToVaultP@55w0rd_
+      state: present
+
+  block:
+
+    - name: Test without members parameter set
+      community.pacemaker.pacemaker_authentication:
+        <<: *pacemaker_params
+      check_mode: yes
+      register: no_members_test
+      ignore_errors: yes
+
+    - assert:
+        that:
+          - no_members_test.failed
+          - no_members_test.msg == "members parameter is required when state is present"

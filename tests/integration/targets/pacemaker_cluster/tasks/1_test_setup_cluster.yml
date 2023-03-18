@@ -1,0 +1,56 @@
+# Copyright 2023, Rhys Campbell <rhyscampbell@bluewin.ch>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+- vars:
+    pacemaker_params: &pacemaker_params
+      debug: yes
+      force: yes
+
+  block:
+    - name: Test non-matching cluster name
+      community.pacemaker.pacemaker_cluster:
+        <<: *pacemaker_params
+        name: AMZ
+        state: started
+        members:
+          localhost
+        enabled: yes
+      check_mode: yes
+      ignore_errors: yes
+      register: cluster_setup
+
+    - assert:
+        that:
+          - cluster_setup.failed
+          - cluster_setup.msg == "The expected cluster name is AMZ but debian was found"
+
+    # TODO on Debian there's a default cluste rthat gets created... need to clean this up (delete it) before continuing
+
+    - name: Test setup cluster (check mode)
+      community.pacemaker.pacemaker_cluster:
+        <<: *pacemaker_params
+        name: AMZ
+        state: started
+        members:
+          localhost
+        enabled: yes
+      check_mode: yes
+      register: cluster_setup
+
+    - assert:
+        that:
+          - cluster_setup.changed
+
+    - name: Test setup cluster
+      community.pacemaker.pacemaker_cluster:
+        <<: *pacemaker_params
+        name: AMZ
+        state: started
+        members:
+          localhost
+        enabled: yes
+      check_mode: no
+      register: cluster_setup
+
+    - assert:
+        that:
+          - cluster_setup.changed        
