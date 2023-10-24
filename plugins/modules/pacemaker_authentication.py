@@ -53,7 +53,7 @@ options:
   pcsd_tokens_file:
     description:
       - Path to the pcsd tokens file.
-      - FUnction calculated default /var/lib/pcsd/tokens (when root) or ~/.pcs/tokens (other users)
+      - Function calculated default /var/lib/pcsd/tokens (when root) or ~/.pcs/tokens (other users)
     type: str
     default: None
   username:
@@ -137,7 +137,7 @@ def main():
     argument_spec.update(
         members=dict(type='list', elements='str', aliases=["hosts"]),
         state=dict(type='str', choices=["present", "absent"], default="present"),
-        pcsd_tokens_file=dict(type='str'),
+        pcsd_tokens_file=dict(type='str', default=None),
         username=dict(type='str', default="hacluster", aliases=["user", "u"]),
         password=dict(type='str', aliases=["p"], no_log=True),
         local=dict(type='bool', default=False),
