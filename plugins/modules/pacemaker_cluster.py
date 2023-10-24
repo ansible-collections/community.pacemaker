@@ -61,7 +61,7 @@ options:
     description:
       - Enable the Pacemaker Cluster on the node.
     type: bool
-    default: true
+    default: false
   wait:
     description:
       - Wait up to 'n' seconds for the nodes to start
@@ -72,6 +72,8 @@ options:
     description:
       - Execute cmd with the --local flag.
       - Only perform auth on the local node.
+    type: bool
+    default: false
 
 notes:
     - Requires the pcs utility on the remote host.
@@ -87,8 +89,6 @@ EXAMPLES = r'''
     state: "started"
     enabled: yes
     name: AMZ
-
-TODO - More examples
 '''
 
 RETURN = r'''

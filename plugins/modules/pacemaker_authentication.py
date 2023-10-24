@@ -53,10 +53,9 @@ options:
   pcsd_tokens_file:
     description:
       - Path to the pcsd tokens file.
+      - FUnction calculated default /var/lib/pcsd/tokens (when root) or ~/.pcs/tokens (other users)
     type: str
-    default:
-      - /var/lib/pcsd/tokens (when root)
-      - ~/.pcs/tokens (other users)
+    default: None
   username:
     description:
       - User to authenticate with.
