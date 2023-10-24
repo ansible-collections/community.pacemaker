@@ -119,6 +119,7 @@ import os
 import json
 import traceback
 
+
 def main():
     argument_spec = pacemaker_common_argument_spec()
     argument_spec.update(
@@ -191,7 +192,7 @@ def main():
                 if rc != 0:
                     module.fail_json(msg=f"Failed stopping cluster rc = {rc}")
                 result["changed"] = True
-                result["msg"] = "Successfully stopped cluster"    
+                result["msg"] = "Successfully stopped cluster"
             else:
                 result["changed"] = False
                 result["msg"] = "Cluster is not running"

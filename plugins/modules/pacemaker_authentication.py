@@ -166,13 +166,13 @@ def main():
                     cmd = build_cluster_auth_cmd(module, members_without_port, port)
                     if module.check_mode is False:
                         (rc, out, err) = module.run_command(cmd)
-                    if rc == 0 or module.check_mode == True:
+                    if rc == 0 or module.check_mode is True:
                         result["changed"] = True
                         result["msg"] = "All provided members were authenticated"
                     else:
                         if module.debug:
                             result["err"] = err
-                            result["out"] = err 
+                            result["out"] = err
                         module.fail_json(msg=f"An error was encountered rc {rc}", **result)
                 else:
                     tokens_data = get_json_file(tokens_file)
@@ -187,7 +187,7 @@ def main():
                             if len(members_to_add) > 0:
                                 if module.check_mode is False:
                                     (rc, out, err) = module.run_command(cmd)
-                                if rc == 0 or module.check_mode == True:
+                                if rc == 0 or module.check_mode is True:
                                     result["changed"] = True
                                     result["msg"] = f"The following members were authenticated {' '.join(sorted(members_to_add))}"
                             # Next bit to remove keys from members and ports dicts, this could be non-atomic, rethink later
@@ -210,14 +210,14 @@ def main():
                 cmd = build_cluster_auth_cmd(module, members_without_port, port)
                 if module.check_mode is False:
                     (rc, out, err) = module.run_command(cmd)
-                if rc == 0 or module.check_mode == True:
+                if rc == 0 or module.check_mode is True:
                     result["changed"] = True
                     result["msg"] = "All provided members were authenticated"
                 else:
                     if module.debug:
                         result["err"] = err
-                        result["out"] = err 
-                    module.fail_json(msg=f"An error was encountered rc {rc}", **result)                    
+                        result["out"] = err
+                    module.fail_json(msg=f"An error was encountered rc {rc}", **result)
         elif state == "absent":
             if pcsd_file_exists:
                 if module.check_mode is False:
@@ -237,3 +237,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    

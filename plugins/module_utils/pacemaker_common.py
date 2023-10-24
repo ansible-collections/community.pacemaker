@@ -8,11 +8,13 @@ import getpass as gt
 def file_exists(file):
     return os.path.exists(file)
 
+
 def get_json_file(file):
     data = None
     with open(file, 'r') as json_file:
         data = json.load(json_file)
     return data
+
 
 def valid_pcsd_tokens_data(json_data):
     """
@@ -56,6 +58,7 @@ def pcsd_tokens_file(user=None):
         token_file = "/var/lib/pcsd/tokens"
     return token_file
 
+
 def build_cluster_auth_cmd(module, members_list, port=None):
     """
     Build the command to auth instances for pcsd
@@ -75,6 +78,7 @@ def build_cluster_auth_cmd(module, members_list, port=None):
     if module.params["force"]:
         cmd_base = f"{cmd_base} --force"
     return cmd_base
+
 
 def build_cluster_setup_cmd(module, members_list):
     """
@@ -97,6 +101,7 @@ def build_cluster_setup_cmd(module, members_list):
         cmd_base = f"{cmd_base} --wait {module.params['wait']}"
     cmd_base = f"{cmd_base} --name {module.params['name']} {members_str}"
     return cmd_base
+
 
 def get_cluster_name(corosync_file="/etc/corosync/corosync.conf"):
     """
