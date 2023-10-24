@@ -40,7 +40,3 @@
         that:
           - simple_test.changed == False
           - simple_test.msg == "All members have tokens in /var/lib/pcsd/tokens"
-
-
-
-

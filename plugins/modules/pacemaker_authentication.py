@@ -53,10 +53,8 @@ options:
   pcsd_tokens_file:
     description:
       - Path to the pcsd tokens file.
+      - Function calculated default /var/lib/pcsd/tokens (when root) or ~/.pcs/tokens (other users)
     type: str
-    default:
-      - /var/lib/pcsd/tokens (when root)
-      - ~/.pcs/tokens (other users)
   username:
     description:
       - User to authenticate with.
@@ -75,6 +73,8 @@ options:
     description:
       - Execute cmd with the --local flag.
       - Only perform auth on the local node.
+    type: bool
+    default: false
 
 notes:
     - Requires the pcs utility on the remote host.
@@ -166,20 +166,20 @@ def main():
                     cmd = build_cluster_auth_cmd(module, members_without_port, port)
                     if module.check_mode is False:
                         (rc, out, err) = module.run_command(cmd)
-                    if rc == 0 or module.check_mode == True:
+                    if rc == 0 or module.check_mode is True:
                         result["changed"] = True
                         result["msg"] = "All provided members were authenticated"
                     else:
-                        if module.debug:
+                        if module.debug is True:
                             result["err"] = err
-                            result["out"] = err 
-                        module.fail_json(msg=f"An error was encountered rc {rc}", **result)
+                            result["out"] = err
+                        module.fail_json(msg="An error was encountered rc {0}".format(rc), **result)
                 else:
                     tokens_data = get_json_file(tokens_file)
                     if valid_pcsd_tokens_data(tokens_data):
                         if sorted(members_without_port) == sorted(tokens_data["tokens"].keys()):
                             result["changed"] = False
-                            result["msg"] = f"All members have tokens in {tokens_file}"
+                            result["msg"] = "All members have tokens in {0}".format(tokens_file)
                         else:
                             members_to_add = list(set(members_without_port) - set(tokens_data["tokens"].keys()))
                             members_to_remove = list(set(tokens_data["tokens"].keys()) - set(members_without_port))
@@ -187,7 +187,7 @@ def main():
                             if len(members_to_add) > 0:
                                 if module.check_mode is False:
                                     (rc, out, err) = module.run_command(cmd)
-                                if rc == 0 or module.check_mode == True:
+                                if rc == 0 or module.check_mode is True:
                                     result["changed"] = True
                                     result["msg"] = f"The following members were authenticated {' '.join(sorted(members_to_add))}"
                             # Next bit to remove keys from members and ports dicts, this could be non-atomic, rethink later
@@ -210,14 +210,14 @@ def main():
                 cmd = build_cluster_auth_cmd(module, members_without_port, port)
                 if module.check_mode is False:
                     (rc, out, err) = module.run_command(cmd)
-                if rc == 0 or module.check_mode == True:
+                if rc == 0 or module.check_mode is True:
                     result["changed"] = True
                     result["msg"] = "All provided members were authenticated"
                 else:
-                    if module.debug:
+                    if module.debug is True:
                         result["err"] = err
-                        result["out"] = err 
-                    module.fail_json(msg=f"An error was encountered rc {rc}", **result)                    
+                        result["out"] = err
+                    module.fail_json(msg=f"An error was encountered rc {rc}", **result)
         elif state == "absent":
             if pcsd_file_exists:
                 if module.check_mode is False:

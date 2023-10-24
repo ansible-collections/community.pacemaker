@@ -16,4 +16,3 @@ class TestPacemakerArgumentSpecCommonMethods(unittest.TestCase):
         options = pacemaker_options.pacemaker_common_argument_spec()
         self.assertTrue(isinstance(options, dict))
         self.assertTrue(isinstance(options['file'], dict))
-        

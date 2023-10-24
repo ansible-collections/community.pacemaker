@@ -8,11 +8,13 @@ import getpass as gt
 def file_exists(file):
     return os.path.exists(file)
 
+
 def get_json_file(file):
     data = None
     with open(file, 'r') as json_file:
         data = json.load(json_file)
     return data
+
 
 def valid_pcsd_tokens_data(json_data):
     """
@@ -56,6 +58,7 @@ def pcsd_tokens_file(user=None):
         token_file = "/var/lib/pcsd/tokens"
     return token_file
 
+
 def build_cluster_auth_cmd(module, members_list, port=None):
     """
     Build the command to auth instances for pcsd
@@ -63,11 +66,11 @@ def build_cluster_auth_cmd(module, members_list, port=None):
     @members_list - members to auth to pcsd
     @port - pcsd port, if not default
     """
-    if port == None:
+    if port is None:
         port = ""
     else:
-        port = f":{port}"
-    members_str = " ".join(f"{item}{port}" for item in members_list)
+        port = ":{0}".format(port)
+    members_str = " ".join("{0}{1}".format(item, port) for item in members_list)
     cmd_base = f"{module.params['pcs_util']} cluster auth {members_str}"
     cmd_base = f"{cmd_base} -u {module.params['username']} -p {module.params['password']}"
     if module.params["local"]:
@@ -75,6 +78,7 @@ def build_cluster_auth_cmd(module, members_list, port=None):
     if module.params["force"]:
         cmd_base = f"{cmd_base} --force"
     return cmd_base
+
 
 def build_cluster_setup_cmd(module, members_list):
     """
@@ -98,6 +102,7 @@ def build_cluster_setup_cmd(module, members_list):
     cmd_base = f"{cmd_base} --name {module.params['name']} {members_str}"
     return cmd_base
 
+
 def get_cluster_name(corosync_file="/etc/corosync/corosync.conf"):
     """
     Return the cluster name from a corosync config file
@@ -105,7 +110,7 @@ def get_cluster_name(corosync_file="/etc/corosync/corosync.conf"):
     """
     with open(corosync_file) as f:
         for line in f:
-            if "cluster_name" in line and line.startswith("#") == False:
+            if "cluster_name" in line and line.startswith("#") is False:
                 cluster_name = line.split(": ")[1].strip()
                 break
     return cluster_name
