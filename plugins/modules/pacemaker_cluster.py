@@ -61,7 +61,7 @@ options:
     description:
       - Enable the Pacemaker Cluster on the node.
     type: bool
-    default true
+    default: true
   wait:
     description:
       - Wait up to 'n' seconds for the nodes to start
