@@ -188,7 +188,7 @@ jobs:
           - '3.9'
           - '3.10'
         docker_image:
-          - "ansible centos7-test-container"
+          - "ansible/centos7-test-container"
   
     steps:
       - name: >-
