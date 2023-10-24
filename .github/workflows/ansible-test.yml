@@ -92,7 +92,7 @@ jobs:
           - '3.9'
           - '3.10'
         docker_image:
-          - "fedora37"
+          - "ansible/fedora37-test-container"
   
     steps:
       - name: >-
