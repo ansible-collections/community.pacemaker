@@ -147,7 +147,7 @@ def main():
         if corosync_file_exists:
             current_cluster_name = get_cluster_name()
             if current_cluster_name != module.params["name"]:
-                module.fail_json(msg=f"The expected cluster name is {module.params['name']} but {current_cluster_name} was found")
+                module.fail_json(msg="The expected cluster name is {0} but {1} was found".format(module.params['name'], current_cluster_name))
         rc, out, err = module.run_command("pcs status")
         cluster_started = None
         cluster_enabled = None

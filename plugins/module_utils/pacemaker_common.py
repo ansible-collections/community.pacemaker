@@ -69,8 +69,8 @@ def build_cluster_auth_cmd(module, members_list, port=None):
     if port is None:
         port = ""
     else:
-        port = f":{port}"
-    members_str = " ".join(f"{item}{port}" for item in members_list)
+        port = ":{0}".format(port)
+    members_str = " ".join("{0}{1}".format(item, port) for item in members_list)
     cmd_base = f"{module.params['pcs_util']} cluster auth {members_str}"
     cmd_base = f"{cmd_base} -u {module.params['username']} -p {module.params['password']}"
     if module.params["local"]:

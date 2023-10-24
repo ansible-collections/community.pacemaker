@@ -175,13 +175,13 @@ def main():
                         if module.debug is True:
                             result["err"] = err
                             result["out"] = err
-                        module.fail_json(msg=f"An error was encountered rc {rc}", **result)
+                        module.fail_json(msg="An error was encountered rc {0}".format(rc), **result)
                 else:
                     tokens_data = get_json_file(tokens_file)
                     if valid_pcsd_tokens_data(tokens_data):
                         if sorted(members_without_port) == sorted(tokens_data["tokens"].keys()):
                             result["changed"] = False
-                            result["msg"] = f"All members have tokens in {tokens_file}"
+                            result["msg"] = "All members have tokens in {0}".format(tokens_file)
                         else:
                             members_to_add = list(set(members_without_port) - set(tokens_data["tokens"].keys()))
                             members_to_remove = list(set(tokens_data["tokens"].keys()) - set(members_without_port))
