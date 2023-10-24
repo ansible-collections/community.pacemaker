@@ -75,6 +75,8 @@ options:
     description:
       - Execute cmd with the --local flag.
       - Only perform auth on the local node.
+    type: bool
+    default: false
 
 notes:
     - Requires the pcs utility on the remote host.
@@ -170,7 +172,7 @@ def main():
                         result["changed"] = True
                         result["msg"] = "All provided members were authenticated"
                     else:
-                        if module.debug:
+                        if module.debug is True:
                             result["err"] = err
                             result["out"] = err
                         module.fail_json(msg=f"An error was encountered rc {rc}", **result)
@@ -214,7 +216,7 @@ def main():
                     result["changed"] = True
                     result["msg"] = "All provided members were authenticated"
                 else:
-                    if module.debug:
+                    if module.debug is True:
                         result["err"] = err
                         result["out"] = err
                     module.fail_json(msg=f"An error was encountered rc {rc}", **result)
