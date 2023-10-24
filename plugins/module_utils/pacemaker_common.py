@@ -66,7 +66,7 @@ def build_cluster_auth_cmd(module, members_list, port=None):
     @members_list - members to auth to pcsd
     @port - pcsd port, if not default
     """
-    if port == None:
+    if port is None:
         port = ""
     else:
         port = f":{port}"
@@ -110,7 +110,7 @@ def get_cluster_name(corosync_file="/etc/corosync/corosync.conf"):
     """
     with open(corosync_file) as f:
         for line in f:
-            if "cluster_name" in line and line.startswith("#") == False:
+            if "cluster_name" in line and line.startswith("#") is False:
                 cluster_name = line.split(": ")[1].strip()
                 break
     return cluster_name

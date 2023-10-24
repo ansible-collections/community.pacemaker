@@ -12,19 +12,19 @@ sys.path.append(path)
 import pacemaker_common
 
 data = {
-            "format_version": 3,
-            "data_version": 2,
-            "tokens": {
-                "amazonlinux1.pacemaker": "bff36ce9-13f4-4589-943e-dfaea6c3d98c",
-                "amazonlinux2.pacemaker": "28287431-4879-47bd-96d3-6a07726820a2",
-                "amazonlinux3.pacemaker": "c9f46b63-85b7-4438-860b-54019e55745b"
-            },
-            "ports": {
-                "amazonlinux1.pacemaker": 2224,
-                "amazonlinux2.pacemaker": 2224,
-                "amazonlinux3.pacemaker": 2224
-            }
-        }
+    "format_version": 3,
+    "data_version": 2,
+    "tokens": {
+        "amazonlinux1.pacemaker": "bff36ce9-13f4-4589-943e-dfaea6c3d98c",
+        "amazonlinux2.pacemaker": "28287431-4879-47bd-96d3-6a07726820a2",
+        "amazonlinux3.pacemaker": "c9f46b63-85b7-4438-860b-54019e55745b"
+    },
+    "ports": {
+        "amazonlinux1.pacemaker": 2224,
+        "amazonlinux2.pacemaker": 2224,
+        "amazonlinux3.pacemaker": 2224
+    }
+}
 
 corosync_data = """
 # Please read the corosync.conf.5 manual page

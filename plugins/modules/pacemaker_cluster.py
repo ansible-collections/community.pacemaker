@@ -115,8 +115,6 @@ from ansible_collections.community.pacemaker.plugins.module_utils.pacemaker_comm
     get_cluster_name
 )
 
-import os
-import json
 import traceback
 
 
