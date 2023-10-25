@@ -71,12 +71,39 @@ jobs:
             ansible.utils
           pull-request-change-detection: true
 
+  integration_matrix:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ansible_collections/community/pacemaker
+    outputs:
+      matrix: ${{ steps.json-list.outputs.modules-to-test }}
+
+    steps:
+
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          path: ansible_collections/community/pacemaker
+
+      - name: Generate module list
+        run: |
+          find tests/integration/targets -type d -maxdepth 1 -not -name 'setup*' -not -name 'master_tasks' | cut -d '/' -f4 | sort | awk NF | jq -sRc 'split("\n") | map(select(length > 0))' > int_test_modules.json
+
+      - name: Set output variable
+        id: json-list
+        run: |
+          output=$(cat int_test_modules.json)
+          echo "modules-to-test=$output" >> $GITHUB_OUTPUT
+          echo "$output"
+
   integration:
+    needs: integration_matrix
     runs-on: >-
       ${{ contains(fromJson(
           '["stable-2.9", "stable-2.10", "stable-2.11"]'
       ), matrix.ansible) && 'ubuntu-20.04' || 'ubuntu-latest' }}
-    name: I (Ⓐ${{ matrix.ansible }}+py${{ matrix.python }})
+    name: I (Ⓐ${{ matrix.ansible }}+py${{ matrix.python }} ${{ matrix.pacemaker_module }})
     strategy:
       fail-fast: false
       matrix:
@@ -91,6 +118,7 @@ jobs:
           - '3.8'
           - '3.9'
           - '3.10'
+        pacemaker_module: ${{ fromJson(needs.integration_matrix.outputs.matrix) }}
         #docker_image:
         #  - "quay.io/ansible/fedora38-test-container"
   
@@ -105,6 +133,7 @@ jobs:
         with:
           ansible-core-version: ${{ matrix.ansible }}
           target-python-version: ${{ matrix.python }}
+          target: ${{ matrix.pacemaker_module }}
           #docker-image: ${{ matrix.docker_image }}
           testing-type: integration
           # OPTIONAL If your integration tests require code
