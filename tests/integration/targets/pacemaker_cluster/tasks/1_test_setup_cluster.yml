@@ -24,9 +24,14 @@
           - cluster_setup.msg == "The expected cluster name is AMZ but debian was found"
 
     # TODO on Debian there's a default cluster that gets created... need to clean this up (delete it) before continuing
-    - name: Destroy test cluster on debian
+    # TODO Do we add this to the module???
+    - name: Destroy test cluster on debian 
       shell: pcs cluster stop; pcs cluster destroy || true
       when: ansible_os_family == "Debian"
+
+    - name: Pause for a bit
+      pause:
+        seconds: 10
 
     - name: Test setup cluster (check mode)
       community.pacemaker.pacemaker_cluster:
