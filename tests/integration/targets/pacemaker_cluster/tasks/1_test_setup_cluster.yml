@@ -33,6 +33,9 @@
       pause:
         seconds: 10
 
+    - name: Start services again
+      shell: systemctl start pcsd
+
     - name: Test setup cluster (check mode)
       community.pacemaker.pacemaker_cluster:
         <<: *pacemaker_params
