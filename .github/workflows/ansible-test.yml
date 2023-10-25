@@ -103,7 +103,7 @@ jobs:
       ${{ contains(fromJson(
           '["stable-2.9", "stable-2.10", "stable-2.11"]'
       ), matrix.ansible) && 'ubuntu-20.04' || 'ubuntu-latest' }}
-    name: I (Ⓐ${{ matrix.ansible }}+py${{ matrix.python }})
+    name: I (Ⓐ${{ matrix.ansible }}+py${{ matrix.python }} ${{ matrix.pacemaker_module }})
     strategy:
       fail-fast: false
       matrix:
@@ -133,7 +133,7 @@ jobs:
         with:
           ansible-core-version: ${{ matrix.ansible }}
           target-python-version: ${{ matrix.python }}
-          collection-root: ${{ matrix.mongodb_version }}
+          collection-root: ${{ matrix.pacemaker_module }}
           #docker-image: ${{ matrix.docker_image }}
           testing-type: integration
           # OPTIONAL If your integration tests require code
