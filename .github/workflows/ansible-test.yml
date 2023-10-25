@@ -133,7 +133,7 @@ jobs:
         with:
           ansible-core-version: ${{ matrix.ansible }}
           target-python-version: ${{ matrix.python }}
-          collection-root: ${{ matrix.pacemaker_module }}
+          target: ${{ matrix.pacemaker_module }}
           #docker-image: ${{ matrix.docker_image }}
           testing-type: integration
           # OPTIONAL If your integration tests require code
