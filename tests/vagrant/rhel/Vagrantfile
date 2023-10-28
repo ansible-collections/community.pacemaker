@@ -1,0 +1,35 @@
+Vagrant.configure("2") do |config|
+    PACEMAKER_HOSTS=3
+    (1..PACEMAKER_HOSTS).each do |pacemaker|
+      node_name = "pacemaker-#{pacemaker}"
+      config.vm.synced_folder ".", "/vagrant", disabled: true
+      config.vm.define node_name do |pacemaker_node|
+        pacemaker_node.vm.box = "generic/rhel9"
+        pacemaker_node.vm.network "private_network", ip: "192.168.56.#{200 + pacemaker}"
+        pacemaker_node.vm.hostname = node_name
+        pacemaker_node.vm.provider :virtualbox do |vbox|
+          vbox.linked_clone = true
+          vbox.name = node_name
+        end
+  
+        config.vm.provision "allow_guest_host_resolution",
+            type: "shell",
+            inline: <<-SHELL
+            sed -i '$ a 192.168.56.201 pacemaker-1' /etc/hosts
+            sed -i '$ a 192.168.56.202 pacemaker-2' /etc/hosts
+            sed -i '$ a 192.168.56.203 pacemaker-3' /etc/hosts
+            SHELL
+        if pacemaker == PACEMAKER_HOSTS
+            pacemaker_node.vm.provision :ansible do |ansible|
+            ansible.groups = {
+              "pacemaker" => ["pacemaker-1","pacemaker-2","pacemaker-3"],
+            }
+            ansible.raw_arguments = "--ask-vault-pass"
+            ansible.limit = "all" # Connect to all hosts
+            ansible.become = true
+            ansible.playbook = "pacemaker.yml"
+          end
+        end
+      end
+    end
+  end
