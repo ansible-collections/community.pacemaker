@@ -1,0 +1,6 @@
+pacemaker_packages:
+  - pcs
+  - pacemaker
+  - fence-agents-all
+  - lvm2-cluster 
+  - gfs2-utils
