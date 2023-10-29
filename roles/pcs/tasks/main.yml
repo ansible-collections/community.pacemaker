@@ -1,4 +1,7 @@
 ---
+- name: Debug
+  debug:
+    var: "{{ ansible_facts.os_family }}.yml"
 # tasks file for pcs
 - name: Include OS-specific vars
   include_vars:
