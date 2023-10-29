@@ -185,11 +185,11 @@ def main():
                         result["out"] = out
                     module.fail_json(msg="Failed creating cluster rc = {0}".format(rc), **result)
                 result["changed"] = True
-                result["msg"] = "The cluster {module.params['name']} was created successfully"
+                result["msg"] = "The cluster {0} was created successfully".format(module.params['name'])
         elif state == "stopped":
             if cluster_started:
                 if module.check_mode is False:
-                    rc, out, err = module.run_command("{module.params['pcs_util]} cluster stop --all")
+                    rc, out, err = module.run_command("{0} cluster stop --all".format(module.params['pcs_util']))
                 if rc != 0:
                     module.fail_json(msg="Failed stopping cluster rc = {0}".format(rc))
                 result["changed"] = True
