@@ -1,13 +1,27 @@
 ---
 # tasks file for pcs
+- name: Include OS-specific vars
+  include_vars:
+    file: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      paths:
+        - "defaults"
+        - "vars"
+      files:
+        - "{{ ansible_facts.distribution }}-{{ ansible_facts.distribution_version }}.yml"
+        - "{{ ansible_facts.os_family }}-{{ ansible_facts.distribution_major_version }}.yml"
+        - "{{ ansible_facts.distribution }}.yml"
+        - "{{ ansible_facts.os_family }}.yml"
+        - "default.yml"
+        - "main.yml"
+  when: pacemaker_packages is not defined
+  tags:
+    - "vars"
+
 - name: Install pacemaker packages
   package:
-    name:
-      - pcs
-      - pacemaker
-      - fence-agents-all
-      - lvm2-cluster 
-      - gfs2-utils
+    name: "{{ pacemaker_packages }}"
 
 # ChangeToVaultP@55w0rd_
 - name: Create the hacluster user
