@@ -4,12 +4,10 @@
     var: "{{ ansible_facts.os_family }}.yml"
 # tasks file for pcs
 - name: Include OS-specific vars
-  include_vars:
+  ansible.builtin.include_vars:
     file: "{{ lookup('first_found', params) }}"
   vars:
     params:
-      paths:
-        - "defaults"
       files:
         - "{{ ansible_facts.distribution }}-{{ ansible_facts.distribution_version }}.yml"
         - "{{ ansible_facts.os_family }}-{{ ansible_facts.distribution_major_version }}.yml"
@@ -17,6 +15,8 @@
         - "{{ ansible_facts.os_family }}.yml"
         - default.yml
         - main.yml
+      paths:
+        - "defaults"
   when: pacemaker_packages is not defined
   tags:
     - "vars"
