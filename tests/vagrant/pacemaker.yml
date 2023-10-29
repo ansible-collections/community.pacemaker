@@ -1,0 +1,36 @@
+- name: Setup Pacemaker
+  hosts: all
+  roles:
+    - "community.pacemaker.pcs"
+
+  vars:
+    pacemaker_params: &pacemaker_params
+      debug: true
+      force: false
+
+  tasks:
+
+  - name: "Authenticate between nodes"
+    community.pacemaker.pacemaker_authentication:
+      <<: *pacemaker_params
+      members:
+        - pacemaker-1
+        - pacemaker-2
+        - pacemaker-3
+      username: "hacluster"
+      password: "ChangeToVaultP@55w0rd_"  # TODO Should go into vault
+      state: "present"
+    when: inventory_hostname == "pacemaker-1"
+
+  - name: "Setup cluster"
+    community.pacemaker.pacemaker_cluster:
+      <<: *pacemaker_params
+      name: myCluster
+      state: started
+      members:
+        - pacemaker-1
+        - pacemaker-2
+        - pacemaker-3
+      enabled: yes
+    when: inventory_hostname == "pacemaker-1"
+

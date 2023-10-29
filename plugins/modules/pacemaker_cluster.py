@@ -180,7 +180,10 @@ def main():
                 if module.check_mode is False:
                     rc, out, err = module.run_command(setup_cluster_cmd)
                 if rc != 0:
-                    module.fail_json(msg=f"Failed creating cluster rc = {rc}")
+                    if module.params['debug']:
+                        result["err"] = err
+                        result["out"] = out
+                    module.fail_json(msg="Failed creating cluster rc = {0}".format(rc), **result)
                 result["changed"] = True
                 result["msg"] = "The cluster {module.params['name']} was created successfully"
         elif state == "stopped":
@@ -188,7 +191,7 @@ def main():
                 if module.check_mode is False:
                     rc, out, err = module.run_command("{module.params['pcs_util]} cluster stop --all")
                 if rc != 0:
-                    module.fail_json(msg=f"Failed stopping cluster rc = {rc}")
+                    module.fail_json(msg="Failed stopping cluster rc = {0}".format(rc))
                 result["changed"] = True
                 result["msg"] = "Successfully stopped cluster"
             else:

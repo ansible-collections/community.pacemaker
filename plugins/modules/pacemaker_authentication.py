@@ -170,9 +170,9 @@ def main():
                         result["changed"] = True
                         result["msg"] = "All provided members were authenticated"
                     else:
-                        if module.debug is True:
+                        if module.params["debug"] is True:
                             result["err"] = err
-                            result["out"] = err
+                            result["out"] = out
                         module.fail_json(msg="An error was encountered rc {0}".format(rc), **result)
                 else:
                     tokens_data = get_json_file(tokens_file)
@@ -189,7 +189,7 @@ def main():
                                     (rc, out, err) = module.run_command(cmd)
                                 if rc == 0 or module.check_mode is True:
                                     result["changed"] = True
-                                    result["msg"] = f"The following members were authenticated {' '.join(sorted(members_to_add))}"
+                                    result["msg"] = "The following members were authenticated {0}".format(' '.join(sorted(members_to_add)))
                             # Next bit to remove keys from members and ports dicts, this could be non-atomic, rethink later
                             json_data = get_json_file(tokens_file)  # get new data
                             if len(members_to_remove) > 0:
@@ -203,9 +203,9 @@ def main():
                                 prepend_msg = ""
                                 if 'msg' in result:
                                     prepend_msg = ", "
-                                result["msg"] = f"{result.get('msg', '')}{prepend_msg}The following members were removed {' '.join(sorted(members_to_remove))}"
+                                result["msg"] = "{0}{1}The following members were removed {2}".format(result.get('msg', ''), prepend_msg, ' '.join(sorted(members_to_remove)))
                     else:
-                        module.fail_json(msg=f"The pcsd token file is not valid {tokens_file}")
+                        module.fail_json(msg="The pcsd token file is not valid {0}".format(tokens_file))
             else:
                 cmd = build_cluster_auth_cmd(module, members_without_port, port)
                 if module.check_mode is False:
@@ -214,19 +214,19 @@ def main():
                     result["changed"] = True
                     result["msg"] = "All provided members were authenticated"
                 else:
-                    if module.debug is True:
+                    if module.params["debug"]is True:
                         result["err"] = err
-                        result["out"] = err
-                    module.fail_json(msg=f"An error was encountered rc {rc}", **result)
+                        result["out"] = out
+                    module.fail_json(msg="An error was encountered rc {0}".format(rc), **result)
         elif state == "absent":
             if pcsd_file_exists:
                 if module.check_mode is False:
                     os.remove(tokens_file)
                 result["changed"] = True
-                result["msg"] = f"The pcsd tokens file has been removed {tokens_file}"
+                result["msg"] = "The pcsd tokens file has been removed {0}".format(tokens_file)
             else:
                 result["changed"] = False
-                result["msg"] = f"The pcsd tokens file has not been configured {tokens_file}"
+                result["msg"] = "The pcsd tokens file has not been configured {0}",format(tokens_file)
     except Exception as excep:
         if module.params["debug"]:
             excep = traceback.format_exc()

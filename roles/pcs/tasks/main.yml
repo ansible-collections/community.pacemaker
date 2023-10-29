@@ -5,10 +5,9 @@
     name:
       - pcs
       - pacemaker
-      #- cman
-      #- fence-agents
-      #- lvm2-cluster
-      #- gfs2-utils
+      - fence-agents-all
+      - lvm2-cluster 
+      - gfs2-utils
 
 # ChangeToVaultP@55w0rd_
 - name: Create the hacluster user
@@ -16,7 +15,14 @@
     name: hacluster
     comment: User for the Pacemaker software
     password: $6$V8GTXhwF8739PPUv$uvg.hPSNk8vCEJJ2tLCqihhSsODVbFymQuyux5zhbDCKcPgZqEX5sT97ECioWSgxvDDoEKJOs7kchqFVLy0mK1
-    shell: /bin/bash 
+    shell: /bin/bash
+
+#- name: Allow HA in firewalld
+#  ansible.posix.firewalld:
+#    service: high-availability
+#    permanent: true
+#    immediate: true
+#    state: enabled
 
 - name: Start the pcsd service
   service:

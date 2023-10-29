@@ -71,12 +71,12 @@ def build_cluster_auth_cmd(module, members_list, port=None):
     else:
         port = ":{0}".format(port)
     members_str = " ".join("{0}{1}".format(item, port) for item in members_list)
-    cmd_base = f"{module.params['pcs_util']} cluster auth {members_str}"
-    cmd_base = f"{cmd_base} -u {module.params['username']} -p {module.params['password']}"
+    cmd_base = "{0} cluster auth {1}".format(module.params['pcs_util'], members_str)
+    cmd_base = "{0} -u {1} -p {2}".format(cmd_base, module.params['username'], module.params['password'])
     if module.params["local"]:
-        cmd_base = f"{cmd_base} --local"
+        cmd_base = "{0} --local".format(cmd_base)
     if module.params["force"]:
-        cmd_base = f"{cmd_base} --force"
+        cmd_base = "{0} --force".format(cmd_base)
     return cmd_base
 
 
@@ -87,19 +87,19 @@ def build_cluster_setup_cmd(module, members_list):
     @members_list - members to add to the cluster
     """
 
-    members_str = " ".join(f"{item}" for item in members_list)
-    cmd_base = f"{module.params['pcs_util']} cluster setup"
+    members_str = " ".join("{0}".format(item) for item in members_list)
+    cmd_base = "{0} cluster setup".format(module.params['pcs_util'])
     if module.params["state"] == "started":
-        cmd_base = f"{cmd_base} --start"
+        cmd_base = "{0} --start".format(cmd_base)
     if module.params["enabled"]:
-        cmd_base = f"{cmd_base} --enable"
+        cmd_base = "{0} --enable".format(cmd_base)
     if module.params["local"]:
-        cmd_base = f"{cmd_base} --local"
+        cmd_base = "{0} --local".format(cmd_base)
     if module.params["force"]:
-        cmd_base = f"{cmd_base} --force"
+        cmd_base = "{0} --force".format(cmd_base)
     if module.params["wait"] is not None:
-        cmd_base = f"{cmd_base} --wait {module.params['wait']}"
-    cmd_base = f"{cmd_base} --name {module.params['name']} {members_str}"
+        cmd_base = "{0} --wait {1}".format(cmd_base, module.params['wait'])
+    cmd_base = "{0} --name {1} {2}".format(cmd_base, module.params['name'], members_str)
     return cmd_base
 
 
