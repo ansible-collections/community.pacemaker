@@ -203,7 +203,9 @@ def main():
                                 prepend_msg = ""
                                 if 'msg' in result:
                                     prepend_msg = ", "
-                                result["msg"] = "{0}{1}The following members were removed {2}".format(result.get('msg', ''), prepend_msg, ' '.join(sorted(members_to_remove)))
+                                result["msg"] = "{0}{1}The following members were removed {2}".format(result.get('msg', ''), 
+                                                                                                      prepend_msg, 
+                                                                                                      ' '.join(sorted(members_to_remove)))
                     else:
                         module.fail_json(msg="The pcsd token file is not valid {0}".format(tokens_file))
             else:
@@ -214,7 +216,7 @@ def main():
                     result["changed"] = True
                     result["msg"] = "All provided members were authenticated"
                 else:
-                    if module.params["debug"]is True:
+                    if module.params["debug"] is True:
                         result["err"] = err
                         result["out"] = out
                     module.fail_json(msg="An error was encountered rc {0}".format(rc), **result)
@@ -226,7 +228,7 @@ def main():
                 result["msg"] = "The pcsd tokens file has been removed {0}".format(tokens_file)
             else:
                 result["changed"] = False
-                result["msg"] = "The pcsd tokens file has not been configured {0}",format(tokens_file)
+                result["msg"] = "The pcsd tokens file has not been configured {0}".format(tokens_file)
     except Exception as excep:
         if module.params["debug"]:
             excep = traceback.format_exc()

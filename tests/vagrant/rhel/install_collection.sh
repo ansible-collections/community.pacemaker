@@ -1,5 +1,4 @@
-#!/bin/bash
-set -e;
+#!/bin/bash -eu
 
 echo "Building community.pacemaker collection";
 WD=$(pwd);
