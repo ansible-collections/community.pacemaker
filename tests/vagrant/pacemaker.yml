@@ -33,4 +33,3 @@
         - pacemaker-3
       enabled: yes
     when: inventory_hostname == "pacemaker-1"
-
