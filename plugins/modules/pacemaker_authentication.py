@@ -203,8 +203,8 @@ def main():
                                 prepend_msg = ""
                                 if 'msg' in result:
                                     prepend_msg = ", "
-                                result["msg"] = "{0}{1}The following members were removed {2}".format(result.get('msg', ''), 
-                                                                                                      prepend_msg, 
+                                result["msg"] = "{0}{1}The following members were removed {2}".format(result.get('msg', ''),
+                                                                                                      prepend_msg,
                                                                                                       ' '.join(sorted(members_to_remove)))
                     else:
                         module.fail_json(msg="The pcsd token file is not valid {0}".format(tokens_file))
