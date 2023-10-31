@@ -30,7 +30,9 @@ options:
   property_value:
     description:
       - The desired value of the propery
-      - Failed setting cluster property: Error: invalid property format: 'False'
+      - All values should be quoted to prevent Ansible munging the data type.\
+        For example yaml boolean would be transformed by Ansible into False and\
+        the following error would result "invalid property format: 'False'".
     type: str
   state:
     description:
