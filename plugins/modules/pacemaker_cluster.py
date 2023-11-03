@@ -61,7 +61,7 @@ options:
     description:
       - Enable the Pacemaker Cluster on the node.
     type: bool
-    default true
+    default: false
   wait:
     description:
       - Wait up to 'n' seconds for the nodes to start
@@ -72,6 +72,8 @@ options:
     description:
       - Execute cmd with the --local flag.
       - Only perform auth on the local node.
+    type: bool
+    default: false
 
 notes:
     - Requires the pcs utility on the remote host.
@@ -87,8 +89,6 @@ EXAMPLES = r'''
     state: "started"
     enabled: yes
     name: AMZ
-
-TODO - More examples
 '''
 
 RETURN = r'''
@@ -115,9 +115,8 @@ from ansible_collections.community.pacemaker.plugins.module_utils.pacemaker_comm
     get_cluster_name
 )
 
-import os
-import json
 import traceback
+
 
 def main():
     argument_spec = pacemaker_common_argument_spec()
@@ -148,7 +147,7 @@ def main():
         if corosync_file_exists:
             current_cluster_name = get_cluster_name()
             if current_cluster_name != module.params["name"]:
-                module.fail_json(msg=f"The expected cluster name is {module.params['name']} but {current_cluster_name} was found")
+                module.fail_json(msg="The expected cluster name is {0} but {1} was found".format(module.params['name'], current_cluster_name))
         rc, out, err = module.run_command("pcs status")
         cluster_started = None
         cluster_enabled = None
@@ -181,17 +180,20 @@ def main():
                 if module.check_mode is False:
                     rc, out, err = module.run_command(setup_cluster_cmd)
                 if rc != 0:
-                    module.fail_json(msg=f"Failed creating cluster rc = {rc}")
+                    if module.params['debug']:
+                        result["err"] = err
+                        result["out"] = out
+                    module.fail_json(msg="Failed creating cluster rc = {0}".format(rc), **result)
                 result["changed"] = True
-                result["msg"] = "The cluster {module.params['name']} was created successfully"
+                result["msg"] = "The cluster {0} was created successfully".format(module.params['name'])
         elif state == "stopped":
             if cluster_started:
                 if module.check_mode is False:
-                    rc, out, err = module.run_command("{module.params['pcs_util]} cluster stop --all")
+                    rc, out, err = module.run_command("{0} cluster stop --all".format(module.params['pcs_util']))
                 if rc != 0:
-                    module.fail_json(msg=f"Failed stopping cluster rc = {rc}")
+                    module.fail_json(msg="Failed stopping cluster rc = {0}".format(rc))
                 result["changed"] = True
-                result["msg"] = "Successfully stopped cluster"    
+                result["msg"] = "Successfully stopped cluster"
             else:
                 result["changed"] = False
                 result["msg"] = "Cluster is not running"
