@@ -114,3 +114,26 @@ def get_cluster_name(corosync_file="/etc/corosync/corosync.conf"):
                 cluster_name = line.split(": ")[1].strip()
                 break
     return cluster_name
+
+def get_cluster_resources(module, data):
+    """
+    Return a dict containing the cluster resource(s)
+    """
+    results = []
+    cmd = "pcs resource status"
+    if data is None:
+        rc, out, err = module.run_command(cmd)
+    else:
+        rc = 0
+        out = data.strip()
+        err = None
+    if rc != 0:
+        module.fail_json(msg="Failed getting cluster resources: {0}".format(err))
+    for line in out.split('\n'):
+        if len(line.split('\t')) == 3:
+            resource_name, resource_type, resource_state = line.split('\t')
+            results.append({"resource_name": resource_name, "resource_type": resource_type, "resource_state": resource_state})
+    return results
+
+
+    

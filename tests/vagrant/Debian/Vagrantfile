@@ -1,0 +1,37 @@
+Vagrant.configure("2") do |config|
+    PACEMAKER_HOSTS=2
+    (1..PACEMAKER_HOSTS).each do |pacemaker|
+      node_name = "pacemaker-#{pacemaker}"
+      config.vm.synced_folder ".", "/vagrant", disabled: true
+      config.vm.define node_name do |pacemaker_node|
+        pacemaker_node.vm.box = "generic/rhel9"
+        pacemaker_node.vm.network "private_network", ip: "192.168.56.#{200 + pacemaker}"
+        pacemaker_node.vm.hostname = node_name
+        pacemaker_node.vm.provider :virtualbox do |vbox|
+          vbox.linked_clone = true
+          vbox.name = node_name
+        end
+  
+        config.vm.provision "epel",
+            type: "shell",
+            inline: 'yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm; yum clean all; yum update -y'
+        config.vm.provision "subscription_manager",
+            type: "shell",
+            inline: 'subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms; subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms'
+        config.vm.provision "avahi_snap",
+            type: "shell",
+            inline: 'yum install snapd; systemctl enable --now snapd.socker; ln -s /var/lib/snapd/snap /snap; snap install avahi'
+        if pacemaker == PACEMAKER_HOSTS
+          pacemaker_node.vm.provision :ansible do |ansible|
+            ansible.groups = {
+              "pacemaker" => ["pacemaker-1","pacemaker-2"],
+            }
+            ansible.raw_arguments = "--ask-vault-pass"
+            ansible.limit = "all"
+            ansible.become = true
+            ansible.playbook = "pacemaker.yml"
+          end
+        end
+      end
+    end
+  end
