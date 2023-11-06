@@ -32,7 +32,7 @@ options:
       - The desired value of the propery
       - All values should be quoted to prevent Ansible munging the data type.\
         For example yaml boolean would be transformed by Ansible into False and\
-        the following error would result "invalid property format: 'False'".
+        the following error would result "invalid property format".
     type: str
   state:
     description:
@@ -87,6 +87,7 @@ from ansible_collections.community.pacemaker.plugins.module_utils.pacemaker_opti
 
 import traceback
 
+
 # TODO Refactor to common code and add unit tests
 def show_property(module, default):
     cluster_properties = {}
@@ -133,6 +134,7 @@ def unset_property(module):
         module.fail_json(msg="Failed unsetting cluster property: {0}".format(err))
     return True
 
+
 def is_property_defined(module):
     cmd = " {0} property show {1}".format(module.params['pcs_util'],
                                           module.params['property_name'])
@@ -143,7 +145,6 @@ def is_property_defined(module):
         return True
     else:
         return False
-
 
 
 def main():
@@ -175,7 +176,7 @@ def main():
                     set_property(module, False)
                 result['changed'] = True
                 result['msg'] = "{0} has been set to {1}".format(module.params['property_name'],
-                                                                   module.params['property_value'])
+                                                                 module.params['property_value'])
         elif state == "absent":
             if is_property_defined(module) is False:
                 result['changed'] = False
