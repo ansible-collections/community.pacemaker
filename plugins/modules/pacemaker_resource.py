@@ -109,6 +109,13 @@ EXAMPLES = r'''
   community.pacemaker.pacemaker_resource:
     resource_name: website
     state: absent
+
+- name: Move myFS resource
+  community.pacemaker.pacemaker_resource:
+    resource_name: myFS
+    resource_type: FileSystem
+    state: "move"
+    member: pacemaker-2
 '''
 
 RETURN = r'''
@@ -167,7 +174,7 @@ def main():
 
         # Get cluster resource
         resources = get_cluster_resources(module, None)
-        module.warn(str(resources))
+        #module.warn(str(resources))
         for resource in resources:
             if resource['resource_name'] == module.params['resource_name']:
                 myResource = resource

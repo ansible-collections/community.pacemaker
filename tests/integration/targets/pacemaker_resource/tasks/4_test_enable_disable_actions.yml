@@ -15,11 +15,11 @@
 - name: Disable myFS resource
   community.pacemaker.pacemaker_resource:
     resource_name: myFS
-    state: "enabled"
+    state: "disabled"
   ignore_errors: true
-  register: enabled
+  register: disabled
 
 - assert:
     that:
-      - enabled.failed
-      - enabled.msg == "This feature is not yet implemented"
+      - disabled.failed
+      - disabled.msg == "This feature is not yet implemented"
