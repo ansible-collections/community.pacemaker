@@ -1,0 +1,25 @@
+---
+# TODO: These features are not yet implemented. Update tests when features are added
+- name: Enable myFS resource
+  community.pacemaker.pacemaker_resource:
+    resource_name: myFS
+    state: "enabled"
+  ignore_errors: true
+  register: enabled
+
+- assert:
+    that:
+      - enabled.failed
+      - enabled.msg == "This feature is not yet implemented"
+
+- name: Disable myFS resource
+  community.pacemaker.pacemaker_resource:
+    resource_name: myFS
+    state: "enabled"
+  ignore_errors: true
+  register: enabled
+
+- assert:
+    that:
+      - enabled.failed
+      - enabled.msg == "This feature is not yet implemented"

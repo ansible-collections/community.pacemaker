@@ -33,3 +33,15 @@
         - pacemaker-3
       enabled: yes
     when: inventory_hostname == "pacemaker-1"
+
+  - name: Create myFS resource
+    community.pacemaker.pacemaker_resource:
+      resource_name: myFS
+      resource_type: FileSystem
+      resource_config:
+        device: 'nfs_server:/export/www'
+        directory: '/www'
+        fstype: 'nfs'
+      resource_group: apache
+      state: present
+    when: inventory_hostname == "pacemaker-1"

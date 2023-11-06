@@ -1,0 +1,25 @@
+---
+- name: Debug start myFS resource (check mode)
+  community.pacemaker.pacemaker_resource:
+    resource_name: myFS
+    state: "debug-start"
+  check_mode: true
+  register: debug
+
+- assert:
+    that:
+      - debug.changed
+      - debug.msg == "The resource myFS has been started in debug mode"
+
+- name: Debug start myFS resource
+  community.pacemaker.pacemaker_resource:
+    resource_name: myFS
+    state: "debug-start"
+  ignore_errors: true
+  register: debug
+
+- assert:
+    that:
+      - debug.failed
+      - "'failed starting the resource myFS in debug mode' in debug.msg"
+

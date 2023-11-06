@@ -115,14 +115,18 @@ def get_cluster_name(corosync_file="/etc/corosync/corosync.conf"):
                 break
     return cluster_name
 
+# TODO This needs a rethink... conditional data testing stuff is not really in sync with the rest of the code
 def get_cluster_resources(module, data):
     """
     Return a dict containing the cluster resource(s)
     """
     results = []
-    cmd = "pcs resource status"
+    cmd = "pcs resource show"
     if data is None:
         rc, out, err = module.run_command(cmd)
+        if any("This command has been replaced with 'pcs resource status'" in s for s in [out, err]):
+            cmd = "pcs resource status"
+            rc, out, err = module.run_command(cmd)
     else:
         rc = 0
         out = data.strip()
@@ -132,7 +136,8 @@ def get_cluster_resources(module, data):
     for line in out.split('\n'):
         if len(line.split('\t')) == 3:
             resource_name, resource_type, resource_state = line.split('\t')
-            results.append({"resource_name": resource_name, "resource_type": resource_type, "resource_state": resource_state})
+            resource_name = resource_name.replace('*', '').strip()
+            results.append({"resource_name": resource_name, "resource_type": resource_type.strip(), "resource_state": resource_state.strip()})
     return results
 
 
