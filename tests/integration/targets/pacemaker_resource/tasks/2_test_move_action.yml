@@ -39,4 +39,4 @@
 - assert:
     that:
       - move.failed
-      - "'Node not found' in move.msg" or "'No such device or address' in move.msg"  # Debian and RHEL Repo versions have differing error messages
+      - ("'Node not found' in move.msg") or ("'No such device or address' in move.msg")  # Debian and RHEL Repo versions have differing error messages
