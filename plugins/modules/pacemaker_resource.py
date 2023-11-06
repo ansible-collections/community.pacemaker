@@ -174,7 +174,7 @@ def main():
 
         # Get cluster resource
         resources = get_cluster_resources(module, None)
-        #module.warn(str(resources))
+        # module.warn(str(resources))
         for resource in resources:
             if resource['resource_name'] == module.params['resource_name']:
                 myResource = resource
