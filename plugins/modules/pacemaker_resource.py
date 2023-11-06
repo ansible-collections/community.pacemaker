@@ -15,7 +15,8 @@ short_description: Create and manage resources within a Pacemaker cluster.
 
 description:
   - Create and manage resources within a Pacemaker cluster.
-  - This module w
+  - This module does not check resource configuration for changes.
+  - To update a resource you can delete it before recreating.
 
 author: Rhys Campbell (@rhysmeister)
 version_added: "1.0.0"
