@@ -40,4 +40,3 @@
     that:
       - move.failed
       - "'Node not found' in move.msg"
-

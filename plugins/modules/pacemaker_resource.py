@@ -33,6 +33,7 @@ options:
     description:
       - The type of resource.
       - Required when state is present
+    type: str
   resource_config:
     description:
       - The configuration of the resource.
@@ -95,17 +96,17 @@ EXAMPLES = r'''
 
 - name: Create website
   community.pacemaker.pacemaker_resource:
-    resource_name: website 
+    resource_name: website
     resource_type: ocf:heartbeat:apache
     resource_config:
-      configfile: /etc/httpd/conf/httpd.conf 
+      configfile: /etc/httpd/conf/httpd.conf
       statusurl: "http://localhost/server-status"
     resource_group: apache
     state: present
 
 - name: Delete a resource
   community.pacemaker.pacemaker_resource:
-    resource_name: website 
+    resource_name: website
     state: absent
 '''
 
@@ -152,7 +153,7 @@ def main():
     rc, out, err = None, None, None
     result = {}
     state = module.params["state"]
-   
+
     if state == "present" and (module.params['resource_type'] is None or module.params['resource_config'] is None):
         module.fail_json(msg="resource_type and resource_config parameters are required when state is present")
     if state == "move" and module.params['member'] is None:
@@ -221,7 +222,7 @@ def main():
                   module.fail_json(msg="failed starting the resource {0}: {1}".format(myResource['resource_name'],
                                                                                       err))
             result["changed"] = True
-            result["msg"] = "The resource {0} has been moved".format(myResource['resource_name'])      
+            result["msg"] = "The resource {0} has been moved".format(myResource['resource_name'])
         elif state == "debug-start":
             if myResource["resource_state"] == "Stopped":
               cmd = "{0} resource debug-start {1}".format(module.params["pcs_util"],

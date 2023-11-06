@@ -115,6 +115,7 @@ def get_cluster_name(corosync_file="/etc/corosync/corosync.conf"):
                 break
     return cluster_name
 
+
 # TODO This needs a rethink... conditional data testing stuff is not really in sync with the rest of the code
 def get_cluster_resources(module, data):
     """
@@ -139,6 +140,3 @@ def get_cluster_resources(module, data):
             resource_name = resource_name.replace('*', '').strip()
             results.append({"resource_name": resource_name, "resource_type": resource_type.strip(), "resource_state": resource_state.strip()})
     return results
-
-
-    

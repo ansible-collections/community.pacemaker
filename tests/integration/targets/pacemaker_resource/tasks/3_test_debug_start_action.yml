@@ -22,4 +22,3 @@
     that:
       - debug.failed
       - "'failed starting the resource myFS in debug mode' in debug.msg"
-
