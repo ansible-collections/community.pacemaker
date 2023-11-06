@@ -228,10 +228,10 @@ def main():
                 cmd = "{0} resource debug-start {1}".format(module.params["pcs_util"],
                                                             myResource['resource_name'])
                 if module.check_mode is False:
-                  rc, out, err = module.run_command(cmd)
-                  if rc != 0:
-                      module.fail_json(msg="failed starting the resource {0} in debug mode: {1}".format(myResource['resource_name'],
-                                                                                                        err))
+                    rc, out, err = module.run_command(cmd)
+                    if rc != 0:
+                        module.fail_json(msg="failed starting the resource {0} in debug mode: {1}".format(myResource['resource_name'],
+                                                                                                          err))
                 result["changed"] = True
                 result["msg"] = "The resource {0} has been started in debug mode".format(myResource['resource_name'])
             else:
