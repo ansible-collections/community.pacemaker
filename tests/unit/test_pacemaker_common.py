@@ -140,6 +140,7 @@ quorum {
 }
 """
 
+
 class FakeAnsinbleModule:
 
     params = {
@@ -155,6 +156,7 @@ class FakeAnsinbleModule:
     def __init__(self):
         self.msg = ""
         self.warning = ""
+
 
 class TestPacemakerCommonMethods(unittest.TestCase):
 

@@ -157,7 +157,7 @@ def main():
     if state == "present" and (module.params['resource_type'] is None or module.params['resource_config'] is None):
         module.fail_json(msg="resource_type and resource_config parameters are required when state is present")
     if state == "move" and module.params['member'] is None:
-         module.fail_json(msg="The member parameter is required when state is move")
+        module.fail_json(msg="The member parameter is required when state is move")
 
     try:
         result = {}
@@ -195,48 +195,49 @@ def main():
             if myResource is None:
                 module.exit_json(changed=False, msg="The resource {0} does not exist in the cluster".format(module.params['resource_name']))
             else:
-              cmd = "{0} resource delete {1}".format(module.params["pcs_util"],
-                                                           myResource['resource_name'])
-              if module.check_mode is False:
-                rc, out, err = module.run_command(cmd)
-                if rc != 0:
-                    module.fail_json(msg="failed deleting the resource {0}: {1}".format(myResource['resource_name'],
-                                                                                          err))
-              result["changed"] = True
-              result["msg"] = "The resource {0} was deleted from the cluster".format(myResource['resource_name'])
+                cmd = "{0} resource delete {1}".format(module.params["pcs_util"],
+                                                       myResource['resource_name'])
+                if module.check_mode is False:
+                    rc, out, err = module.run_command(cmd)
+                    if rc != 0:
+                        module.fail_json(msg="failed deleting the resource {0}: {1}".format(myResource['resource_name'],
+                                                                                            err))
+                result["changed"] = True
+                result["msg"] = "The resource {0} was deleted from the cluster".format(myResource['resource_name'])
         elif state == "enabled":
             cmd = "{0} resource enable {1}".format(module.params["pcs_util"],
                                                    myResource['resource_name'])
             module.fail_json(msg="This feature is not yet implemented")
         elif state == "disabled":
             cmd = "{0} resource disable {1}".format(module.params["pcs_util"],
-                                                   myResource['resource_name'])
+                                                    myResource['resource_name'])
             module.fail_json(msg="This feature is not yet implemented")
-        elif state ==  "move":
+        elif state == "move":
             cmd = "{0} resource move {1} {2}".format(module.params["pcs_util"],
                                                      myResource['resource_name'],
                                                      module.params['member'])
             if module.check_mode is False:
-              rc, out, err = module.run_command(cmd)
-              if rc != 0:
-                  module.fail_json(msg="failed starting the resource {0}: {1}".format(myResource['resource_name'],
-                                                                                      err))
+                rc, out, err = module.run_command(cmd)
+                if rc != 0:
+                    module.fail_json(msg="failed starting the resource {0}: {1}".format(myResource['resource_name'],
+                                                                                        err))
             result["changed"] = True
             result["msg"] = "The resource {0} has been moved".format(myResource['resource_name'])
         elif state == "debug-start":
             if myResource["resource_state"] == "Stopped":
-              cmd = "{0} resource debug-start {1}".format(module.params["pcs_util"],
-                                                          myResource['resource_name'])
-              if module.check_mode is False:
-                rc, out, err = module.run_command(cmd)
-                if rc != 0:
-                    module.fail_json(msg="failed starting the resource {0} in debug mode: {1}".format(myResource['resource_name'],
-                                                                                                      err))
-              result["changed"] = True
-              result["msg"] = "The resource {0} has been started in debug mode".format(myResource['resource_name'])
+                cmd = "{0} resource debug-start {1}".format(module.params["pcs_util"],
+                                                            myResource['resource_name'])
+                if module.check_mode is False:
+                  rc, out, err = module.run_command(cmd)
+                  if rc != 0:
+                      module.fail_json(msg="failed starting the resource {0} in debug mode: {1}".format(myResource['resource_name'],
+                                                                                                        err))
+                result["changed"] = True
+                result["msg"] = "The resource {0} has been started in debug mode".format(myResource['resource_name'])
             else:
                 result["changed"] = False
-                result["msg"] = "The resource {0} is already started. Stop the resource first before starting it in debug mode".format(myResource['resource_name'])
+                msg = "The resource {0} is already started. Stop the resource first before starting it in debug mode"
+                result["msg"] = msg.format(myResource['resource_name'])
 
     except Exception as excep:
         if module.params["debug"]:
