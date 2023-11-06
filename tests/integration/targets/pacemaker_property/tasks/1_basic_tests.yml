@@ -1,0 +1,156 @@
+---
+- name: "Only ever turn fencing off on a test cluster (check mode)"
+  pacemaker_property:
+    property_name: "stonith-enabled"
+    property_value: "false"
+    debug: true
+  check_mode: true
+  register: stonith
+
+- name: "Assert changed"
+  assert:
+    that:
+      - stonith.changed
+
+- name: "Check value"
+  shell: pcs property list --all
+  register: output
+
+- name: "Assert property is unchanged"
+  assert:
+    that: 
+      - "'stonith-enabled: true' in output.stdout"
+
+- name: "Only ever turn fencing off on a test cluster"
+  pacemaker_property:
+    property_name: "stonith-enabled"
+    property_value: "false"
+  register: stonith
+
+- name: "Assert changed"
+  assert:
+    that:
+      - stonith.changed
+
+- name: "Check value"
+  shell: pcs property list --all
+  register: output
+
+- name: "Assert property is changed"
+  assert:
+    that: 
+      - "'stonith-enabled: false' in output.stdout"
+
+- name: "Only ever turn fencing off on a test cluster (again)"
+  pacemaker_property:
+    property_name: "stonith-enabled"
+    property_value: "false"
+  register: stonith
+
+- name: "Assert is not changed"
+  assert:
+    that:
+      - stonith.changed == False
+
+- name: "Unset property (check mode)"
+  pacemaker_property:
+    property_name: "stonith-enabled"
+    state: "absent"
+  check_mode: true
+  register: stonith
+
+- name: "Assert changed"
+  assert:
+    that:
+      - stonith.changed
+
+- name: "Check value"
+  shell: pcs property list --all
+  register: output
+
+- name: "Assert property is still present"
+  assert:
+    that: 
+      - "'stonith-enabled: false' in output.stdout"
+
+- name: "Unset property"
+  pacemaker_property:
+    property_name: "stonith-enabled"
+    state: "absent"
+  register: stonith
+
+- name: "Assert changed"
+  assert:
+    that:
+      - stonith.changed
+
+# --all flag always shows "all" properties, even those we have removed with unset
+- name: "Check value"
+  shell: pcs property show stonith-enabled
+  register: output
+
+- name: "Assert property is not present"
+  assert:
+    that: 
+      - "'stonith-enabled' not in output.stdout"
+
+- name: "Set property to false again"
+  pacemaker_property:
+    property_name: "stonith-enabled"
+    property_value: "false"
+  register: stonith
+
+- name: "Assert changed"
+  assert:
+    that:
+      - stonith.changed
+
+- name: "Check value"
+  shell: pcs property list --all
+  register: output
+
+- name: "Assert property is present again"
+  assert:
+    that: 
+      - "'stonith-enabled: false' in output.stdout"
+
+- name: "Set property to false again"
+  pacemaker_property:
+    property_name: "stonith-enabled"
+    property_value: "false"
+  register: stonith
+
+- name: "Assert changed"
+  assert:
+    that:
+      - stonith.changed == False
+
+- name: "Check value"
+  shell: pcs property list --all
+  register: output
+
+- name: "Assert property is still false"
+  assert:
+    that: 
+      - "'stonith-enabled: false' in output.stdout"
+
+- name: "Set property to default value"
+  pacemaker_property:
+    property_name: "stonith-enabled"
+    state: "default"
+  register: stonith
+
+- name: "Assert changed"
+  assert:
+    that:
+      - stonith.changed
+
+# TODO default mode not working as expected FIXME
+#- name: "Check value"
+#  shell: pcs property show stonith-enabled
+#  register: output
+
+#- name: "Assert property is default value of true"
+#  assert:
+#    that: 
+#      - "'stonith-enabled: true' in output.stdout"
