@@ -1,0 +1,9 @@
+---
+# main tasks file
+- import_tasks: 1_test_basic_resource_actions.yml
+
+- import_tasks: 2_test_move_action.yml
+
+- import_tasks: 3_test_debug_start_action.yml
+
+- import_tasks: 4_test_enable_disable_actions.yml

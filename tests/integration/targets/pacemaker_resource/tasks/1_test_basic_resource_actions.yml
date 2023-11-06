@@ -1,0 +1,57 @@
+---
+- name: Create myFS resource (check_mode)
+  community.pacemaker.pacemaker_resource:
+    resource_name: myFS
+    resource_type: FileSystem
+    resource_config:
+      device: 'nfs_server:/export/www'
+      directory: '/www'
+      fstype: 'nfs'
+    resource_group: apache
+    state: present
+    debug: true
+  check_mode: true
+  register: myFS
+
+- assert:
+    that:
+      - myFS.changed
+
+- name: Delete myFS resource
+  community.pacemaker.pacemaker_resource:
+    resource_name: myFS
+    state: absent
+    debug: true
+
+- name: Create myFS resource
+  community.pacemaker.pacemaker_resource:
+    resource_name: myFS
+    resource_type: FileSystem
+    resource_config:
+      device: 'nfs_server:/export/www'
+      directory: '/www'
+      fstype: 'nfs'
+    resource_group: apache
+    state: present
+  register: myFS
+
+# TDO Verify resource exists
+- assert:
+    that:
+      - myFS.changed
+
+- name: Create myFS resource (again)
+  community.pacemaker.pacemaker_resource:
+    resource_name: myFS
+    resource_type: FileSystem
+    resource_config:
+      device: 'nfs_server:/export/www'
+      directory: '/www'
+      fstype: 'nfs'
+    resource_group: apache
+    state: present
+  register: myFS
+
+- assert:
+    that:
+      - myFS.changed == False

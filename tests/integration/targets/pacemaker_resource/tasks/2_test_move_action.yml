@@ -1,0 +1,42 @@
+---
+- name: Move myFS resource (check mode) - Will fail
+  community.pacemaker.pacemaker_resource:
+    resource_name: myFS
+    resource_type: FileSystem
+    state: "move"
+  check_mode: true
+  ignore_errors: true
+  register: move
+
+- assert:
+    that:
+      - move.failed
+      - move.msg == "The member parameter is required when state is move"
+
+- name: Move myFS resource (check mode)
+  community.pacemaker.pacemaker_resource:
+    resource_name: myFS
+    resource_type: FileSystem
+    state: "move"
+    member: pacemaker-2
+  check_mode: true
+  register: move
+
+- assert:
+    that:
+      - move.changed
+      - move.msg == "The resource myFS has been moved"
+
+- name: Move myFS resource
+  community.pacemaker.pacemaker_resource:
+    resource_name: myFS
+    resource_type: FileSystem
+    state: "move"
+    member: pacemaker-2
+  ignore_errors: true
+  register: move
+
+- assert:
+    that:
+      - move.failed
+      - ("'Node not found' in move.msg") or ("'No such device or address' in move.msg")  # Debian and RHEL Repo versions have differing error messages

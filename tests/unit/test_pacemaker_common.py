@@ -141,6 +141,23 @@ quorum {
 """
 
 
+class FakeAnsinbleModule:
+
+    params = {
+        "pcs_util": "pcs",
+        "local": True,
+        "force": True,
+        "name": "debian",
+        "state": "started",
+        "enabled": True,
+        "wait": None
+    }
+
+    def __init__(self):
+        self.msg = ""
+        self.warning = ""
+
+
 class TestPacemakerCommonMethods(unittest.TestCase):
 
     def test_file_exists(self):
@@ -229,22 +246,6 @@ class TestPacemakerCommonMethods(unittest.TestCase):
 
     def test_build_cluster_setup_cmd_test1(self):
 
-        class FakeAnsinbleModule:
-
-            params = {
-                "pcs_util": "pcs",
-                "local": True,
-                "force": True,
-                "name": "debian",
-                "state": "started",
-                "enabled": True,
-                "wait": None
-            }
-
-            def __init__(self):
-                self.msg = ""
-                self.warning = ""
-
         module = FakeAnsinbleModule()
         members_without_port = ["server1", "server2", "server3"]
         cmd = pacemaker_common.build_cluster_setup_cmd(module, members_without_port)
@@ -264,3 +265,11 @@ class TestPacemakerCommonMethods(unittest.TestCase):
             file.write(corosync_data)
         cluster_name = pacemaker_common.get_cluster_name(corosync_file=corosync_file)
         self.assertTrue(cluster_name == "debian")
+
+    def test_get_cluster_resources(self):
+        module = FakeAnsinbleModule()
+        data = "VirtualIP	(ocf::heartbeat:IPaddr2):	Started\nWebSite	(ocf::heartbeat:apache):	Started\n"
+        results = pacemaker_common.get_cluster_resources(module, data)
+        self.assertIsInstance(results, list)
+        self.assertIsInstance(results[0], dict)
+        self.assertTrue(results[0]['resource_name'] == "VirtualIP")
