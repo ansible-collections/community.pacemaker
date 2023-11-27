@@ -106,10 +106,10 @@ import traceback
 # TODO Refactor to common and add unit tests?
 
 
-"""
-Return true of the fencing agent exists on the host
-"""
 def fence_agent_exists(module):
+    """
+    Return true of the fencing agent exists on the host
+    """
     status = False
     cmd = "{0} stonith describe {1}".format(module.params['pcs_util'],
                                             module.params['agent'])
@@ -119,12 +119,12 @@ def fence_agent_exists(module):
     return status
 
 
-"""
-Returns true if the given fence is configured.
-We only check the name of the fence. Configuration
-is not checked at all.
-"""
 def is_fence_configured(module):
+    """
+    Returns true if the given fence is configured.
+    We only check the name of the fence. Configuration
+    is not checked at all.
+    """
     status = False
     cmd = "{0} stonith show {1}".format(module.params['pcs_util'],
                                         module.params['name'])
@@ -134,10 +134,10 @@ def is_fence_configured(module):
     return status
 
 
-"""
-Returns true if the fence was deleted
-"""
 def delete_fence(module):
+    """
+    Returns true if the fence was deleted
+    """
     status = False
     cmd = "{0} stonith delete {1}".format(module.params['pcs_util'],
                                           module.params['name'])
