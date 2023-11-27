@@ -1,0 +1,95 @@
+---
+- name: Create fence (check mode)
+  community.pacemaker.pacemaker_fence:
+    name: "some_fence"
+    agent: "fence_vbox"
+    config:
+      ipaddr: "192.168.1.101"
+      login: "rhys"
+      pcmk_host_list: "{{ item }}"
+      identity_file: "/path/to/id_rsa"
+  check_mode: true
+  register: fence
+
+- assert:
+    that: fence.changed
+
+- name: Create fence
+  community.pacemaker.pacemaker_fence:
+    name: "some_fence"
+    agent: "fence_vbox"
+    config:
+      ipaddr: "192.168.1.101"
+      login: "rhys"
+      pcmk_host_list: "{{ item }}"
+      identity_file: "/path/to/id_rsa"
+  register: fence
+
+- assert:
+    that: fence.changed
+
+- shell: pcs stonith show some_fence
+  register: pcs
+
+- assert:
+    that:
+      - "'some_fence' in pcs.stdout"
+
+- name: Create fence (again)
+  community.pacemaker.pacemaker_fence:
+    name: "some_fence"
+    agent: "fence_vbox"
+    config:
+      ipaddr: "192.168.1.101"
+      login: "rhys"
+      pcmk_host_list: "{{ item }}"
+      identity_file: "/path/to/id_rsa"
+  register: fence
+
+- assert:
+    that: fence.changed == False
+
+- name: Remove fence (check mode)
+  community.pacemaker.pacemaker_fence:
+    name: "some_fence"
+    state: "absent"
+  check_mode: true
+  register: fence
+
+- assert:
+    that: fence.changed
+
+- shell: pcs stonith show some_fence
+  register: pcs
+
+- assert:
+    that:
+      - "'some_fence' in pcs.stdout"
+
+- name: Remove fence
+  community.pacemaker.pacemaker_fence:
+    name: "some_fence"
+    state: "absent"
+  register: fence
+
+- assert:
+    that: fence.changed
+
+- shell: pcs stonith show some_fence
+  register: pcs
+  ignore_errors: true
+
+- assert:
+    that:
+      - "'some_fence' in pcs.stdout"
+      - pcs.rc != 0
+
+
+- name: Remove fence
+  community.pacemaker.pacemaker_fence:
+    name: "some_fence"
+    state: "absent"
+  register: fence
+
+- assert:
+    that: fence.changed == False

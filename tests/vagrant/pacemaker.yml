@@ -45,3 +45,18 @@
       resource_group: apache
       state: present
     when: inventory_hostname == "pacemaker-1"
+
+  - name: Create fences
+    community.pacemaker.pacemaker_fence:
+      name: "{{ item }}_fence"
+      agent: "fence_vbox"
+      config:
+        ipaddr: "192.168.1.101"  # TODO: FIXME This config makes no sense for practical purposes
+        login: "rhys"
+        pcmk_host_list: "{{ item }}"
+        identity_file: "/path/to/id_rsa"
+    when: inventory_hostname == "pacemaker-1"
+    loop:
+      - pacemaker-1
+      - pacemaker-2
+      - pacemaker-3
