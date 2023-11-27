@@ -6,7 +6,7 @@
     config:
       ipaddr: "192.168.1.101"
       login: "rhys"
-      pcmk_host_list: "{{ item }}"
+      pcmk_host_list: "xxxxxx"
       identity_file: "/path/to/id_rsa"
   check_mode: true
   register: fence
@@ -21,7 +21,7 @@
     config:
       ipaddr: "192.168.1.101"
       login: "rhys"
-      pcmk_host_list: "{{ item }}"
+      pcmk_host_list: "xxxxxx"
       identity_file: "/path/to/id_rsa"
   register: fence
 
@@ -42,7 +42,7 @@
     config:
       ipaddr: "192.168.1.101"
       login: "rhys"
-      pcmk_host_list: "{{ item }}"
+      pcmk_host_list: "xxxxxx"
       identity_file: "/path/to/id_rsa"
   register: fence
 
