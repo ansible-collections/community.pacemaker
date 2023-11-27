@@ -81,7 +81,7 @@
 
 - assert:
     that:
-      - "'some_fence' in pcs.stdout"
+      - "'unable to find resource' in pcs.stdout"
       - pcs.rc != 0
 
 - name: Remove fence
