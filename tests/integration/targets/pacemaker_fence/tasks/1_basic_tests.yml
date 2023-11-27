@@ -84,7 +84,6 @@
       - "'some_fence' in pcs.stdout"
       - pcs.rc != 0
 
-
 - name: Remove fence
   community.pacemaker.pacemaker_fence:
     name: "some_fence"
