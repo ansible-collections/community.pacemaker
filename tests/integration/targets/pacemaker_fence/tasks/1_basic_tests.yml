@@ -1,4 +1,9 @@
 ---
+- name: Ensure we start with no fences
+  community.pacemaker.pacemaker_fence:
+    name: "some_fence"
+    state: "absent"
+
 - name: Create fence (check mode)
   community.pacemaker.pacemaker_fence:
     name: "some_fence"
