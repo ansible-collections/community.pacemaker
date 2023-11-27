@@ -1,3 +1,5 @@
+#!/bin/bash -eu
+
 if [ ! -f /root/fence_agents.success ]; then
         yum install -y git autoconf automake corosynclib-devel flex flex-devel \
                 libtool gcc-c++ make nss-devel libcurl-devel libxml2-devel libuuid-devel \

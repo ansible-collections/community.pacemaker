@@ -9,12 +9,12 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: pacemaker_fance
+module: pacemaker_fence
 
 short_description: Manage Fences for a Pacemaker Cluster.
 
 description:
-  - Manage Manage Fences for a Pacemaker Cluster.
+  - Manage Fences for a Pacemaker Cluster.
   - At the moment this module will only create or remove the fence.
   - Verification is performed by name only.
 
@@ -105,6 +105,7 @@ import traceback
 
 # TODO Refactor to common and add unit tests?
 
+
 """
 Return true of the fencing agent exists on the host
 """
@@ -116,6 +117,7 @@ def fence_agent_exists(module):
     if rc == 0:
         status = True
     return status
+
 
 """
 Returns true if the given fence is configured.
@@ -131,6 +133,7 @@ def is_fence_configured(module):
         status = True
     return status
 
+
 """
 Returns true if the fence was deleted
 """
@@ -145,6 +148,7 @@ def delete_fence(module):
         module.fail_json(msg="Failed to delete the fence {0}: {1}".format(module.params['name'],
                                                                           err))
     return status
+
 
 def create_fence(module):
     options = ''.join(["{0}={1} ".format(k, v) for k, v in module.params['config'].items()])
