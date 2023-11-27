@@ -180,7 +180,7 @@ def main():
     state = module.params["state"]
 
     try:
-        if fence_agent_exists(module) is False:
+        if state == "present" and fence_agent_exists(module) is False:
             module.fail_json(msg="The configured fence agent does not exist: {0}".format(module.params['agent']))
         result = {}
         fence_exists = is_fence_configured(module)
