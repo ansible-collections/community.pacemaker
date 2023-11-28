@@ -14,7 +14,7 @@
 # Test location constraint
 - name: Create a location constraint (check mode)
   community.pacemaker.pacemaker_constraint:
-    name: myResource
+    name: myFS
     type: location
     prefers:
       - node1: 100
@@ -31,11 +31,11 @@
 
 - assert:
     that:
-      - "'myResource_location' not in pcs.stdout"
+      - "'myFS_location' not in pcs.stdout"
 
 - name: Create a location constraint
   community.pacemaker.pacemaker_constraint:
-    name: myResource
+    name: myFS
     type: location
     prefers:
       - node1: 100
@@ -51,11 +51,11 @@
 
 - assert:
     that:
-      - "'myResource_location' in pcs.stdout"
+      - "'myFS_location' in pcs.stdout"
 
 - name: Create a location constraint (again)
   community.pacemaker.pacemaker_constraint:
-    name: myResource
+    name: myFS
     type: location
     prefers:
       - node1: 100
@@ -68,7 +68,7 @@
 
 - name: Remove a location constraint (check mode)
   community.pacemaker.pacemaker_constraint:
-    name: myResource
+    name: myFS
     type: location
     state: absent
   check_mode: true
@@ -82,11 +82,11 @@
 
 - assert:
     that:
-      - "'myResource_location' in pcs.stdout"
+      - "'myFS_location' in pcs.stdout"
 
 - name: Remove a location constraint
   community.pacemaker.pacemaker_constraint:
-    name: myResource
+    name: myFS
     type: location
     state: absent
 
@@ -99,11 +99,11 @@
 
 - assert:
     that:
-      - "'myResource_location' not in pcs.stdout"
+      - "'myFS_location' not in pcs.stdout"
 
 - name: Remove a location constraint (again)
   community.pacemaker.pacemaker_constraint:
-    name: myResource
+    name: myFS
     type: location
     state: absent
 
