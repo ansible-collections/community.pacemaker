@@ -177,8 +177,8 @@ def is_constraint_configured(module):
     if rc == 0:
         if get_constraint_id(module) in out:
             status = True
-        else:
-            module.fail_json(msg="Failed checking constraint: {0}".format(err + " : " + out))
+    else:
+        module.fail_json(msg="Failed checking constraint: {0}".format(err + " : " + out))
     return status
 
 
