@@ -231,6 +231,8 @@ def create_constraint(module):
                                                   module.params['name'])
     if constraint_type == "location":
         # These two commands are supposed to work with multiple nodes but don't seem to... perhaps a version thing?
+        # Had to remove the prefers and avoids keywords... these are documented in the help for v0.9.169 but don't seem to work
+        # revisit this when we upgrade to a newer version?
         if 'prefers' in module.params:
             node_config = ' '.join(["{} {}".format(key, value) for d in module.params['prefers'] for key, value in d.items()]).strip()
             cmd = "{0} {1}".format(cmd, node_config)
