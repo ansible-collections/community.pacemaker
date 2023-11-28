@@ -218,6 +218,7 @@ def create_constraint(module):
         # These two commands are supposed to work with multiple nodes but don't seem to... perhaps a version thing?
         if 'prefers' in module.params:
             node_config = ' '.join(["{} {}".format(key, value) for d in module.params['prefers'] for key, value in d.items()]).strip()
+            node_config = node_config.replace('\n', ' ')
             cmd = "{0} prefers {1}".format(cmd, node_config)
         elif 'avoids' in module.params:
             node_config = ' '.join(["{} {}".format(key, value) for d in module.params['avoids'] for key, value in d.items()]).strip()
