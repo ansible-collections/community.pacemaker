@@ -235,7 +235,7 @@ def create_constraint(module):
             node_config = ' '.join(["{} {}".format(key, value) for d in module.params['prefers'] for key, value in d.items()]).strip()
             cmd = "{0} {1}".format(cmd, node_config)
         elif 'avoids' in module.params:
-            node_config = ' '.join(["{} {}".format(key, value) for d in module.params['avoids'] for key, value in d.items()]).strip()
+            node_config = ' '.join(["{} -{}".format(key, value) for d in module.params['avoids'] for key, value in d.items()]).strip()
             cmd = "{0} avoids {1}".format(cmd, node_config)
         else:
             module.fail_json(msg="invalid verb with location constraint")
@@ -261,7 +261,7 @@ def create_constraint(module):
     # Execute the cmd and set status to True if successful
     rc, out, stderr = module.run_command(cmd)
     if module.params['debug']:
-        module.warn(cmd)
+        module.warn(cmd)  # TODO clean this up
         module.warn(out)
         module.warn(stderr)
     if rc == 0:
