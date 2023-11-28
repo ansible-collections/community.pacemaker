@@ -234,10 +234,10 @@ def create_constraint(module):
         # These two commands are supposed to work with multiple nodes but don't seem to... perhaps a version thing?
         # Had to remove the prefers and avoids keywords... these are documented in the help for v0.9.169 but don't seem to work
         # revisit this when we upgrade to a newer version?
-        if 'prefers' in module.params:
+        if module.params['prefers'] is not None:
             node_config = ' '.join(["{} {}".format(key, value) for d in module.params['prefers'] for key, value in d.items()]).strip()
             cmd = "{0} {1}".format(cmd, node_config)
-        elif 'avoids' in module.params:
+        elif module.params['avoids'] is not None:
             # The minus turns it into an avoid
             node_config = ' '.join(["{} -{}".format(key, value) for d in module.params['avoids'] for key, value in d.items()]).strip()
             cmd = "{0} {1}".format(cmd, node_config)
@@ -245,11 +245,11 @@ def create_constraint(module):
             module.fail_json(msg="invalid verb with location constraint")
     elif constraint_type == "order":
 
-        if 'order' in module.params:
+        if module.params['order'] is not None:
             module.fail_json(msg="TODO: Functonality not yet implemented")
             # NOt correct for this task
             cmd = "{0} prefers {1}".format(cmd, ' '.join(["{}={}".format(key, value) for d in module.params['prefers'] for key, value in d.items()]))
-        elif 'set' in module.params:
+        elif module.params['set']:
             cmd = "{0} constraint {1} id={2} set {3}".format(module.params['pcs_util'],
                                                              constraint_type,
                                                              id,
@@ -257,7 +257,7 @@ def create_constraint(module):
         else:
             module.fail_json(msg="the ordering config key must be provided when type is order")
     elif constraint_type == "colocation":
-        if 'resource' in module.params:
+        if module.params['resources']:
             cmd = "{0} {1}".format(cmd, " with ".join(resource for resource in module.params['resources']))
         else:
             module.fail_json(msg="the resources config key must be provided when type is order")
