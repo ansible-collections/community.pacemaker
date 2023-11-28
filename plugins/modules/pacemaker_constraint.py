@@ -228,7 +228,7 @@ def create_constraint(module):
             cmd = "{0} constraint {1} id={2} set {3}".format(module.params['pcs_util'],
                                                              constraint_type,
                                                              id,
-                                                             " ".join(resource for resource in module.params['set'])
+                                                             " ".join(resource for resource in module.params['set']))
         else:
             module.fail_json(msg="the ordering config key must be provided when type is order")
     elif constraint_type == "colocation":
@@ -272,9 +272,9 @@ def main():
             if exists:
                 result['changed'] = False
                 result['msg'] ="The constraint {0} already exists".format(constraint_id)
-          else:
-            if module.check_mode:
-                create_constraint(module)
+            else:
+              if module.check_mode:
+                  create_constraint(module)
             result['changed'] = True
             result['msg'] = "The contraint {0} was successfully created".format(constraint_id)
         elif state == "absent":
