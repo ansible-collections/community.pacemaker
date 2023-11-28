@@ -247,6 +247,8 @@ def create_constraint(module):
     rc, out, stderr = module.run_command(cmd)
     if module.params['debug']:
         module.warn(cmd)
+        module.warn(out)
+        module.warn(stderr)
     if rc == 0:
         status = True
     return status
