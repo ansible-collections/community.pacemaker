@@ -175,7 +175,7 @@ def is_constraint_configured(module):
     cmd = "{0} constraint show --full".format(module.params['pcs_util'])
     rc, out, err = module.run_command(cmd)
     if rc == 0:
-        if get_constraint_id(module) in out.stdout:
+        if get_constraint_id(module) in out:
             status = True
         else:
             module.fail_json(msg="Failed checking constraint: {0}".format(err))
