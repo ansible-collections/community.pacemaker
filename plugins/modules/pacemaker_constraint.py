@@ -215,10 +215,13 @@ def create_constraint(module):
                                                   id,
                                                   module.params['name'])
     if constraint_type == "location":
+        # These two commands are supposed to work with multiple nodes but don't seem to... perhaps a version thing?
         if 'prefers' in module.params:
-            cmd = "{0} prefers {1}".format(cmd, ' '.join(["{} {}".format(key, value) for d in module.params['prefers'] for key, value in d.items()]))
+            node_config = ' '.join(["{} {}".format(key, value) for d in module.params['prefers'] for key, value in d.items()]).strip()
+            cmd = "{0} prefers {1}".format(cmd, node_config)
         elif 'avoids' in module.params:
-            cmd = "{0} avoids {1}".format(cmd, ' '.join(["{} {}".format(key, value) for d in module.params['avoids'] for key, value in d.items()]))
+            node_config = ' '.join(["{} {}".format(key, value) for d in module.params['avoids'] for key, value in d.items()]).strip()
+            cmd = "{0} avoids {1}".format(cmd, node_config)
         else:
             module.fail_json(msg="invalid verb with location constraint")
     elif constraint_type == "order":
