@@ -243,6 +243,8 @@ def create_constraint(module):
 
     # Execute the cmd and set status to True if successful
     rc, out, stderr = module.run_command(cmd)
+    if module.params['debug']:
+        module.warn(cmd)
     if rc == 0:
         status = True
     return status
@@ -280,7 +282,7 @@ def main():
                 if module.check_mode is False:
                     create_constraint(module)
                 result['changed'] = True
-                result['msg'] = "The contraint {0} was successfully created".format(constraint_id)
+                result['msg'] = "The constraint{0} was successfully created".format(constraint_id)
         elif state == "absent":
             if exists:
                 if module.check_mode is False:
