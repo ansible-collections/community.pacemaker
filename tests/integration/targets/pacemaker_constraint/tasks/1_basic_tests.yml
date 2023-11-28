@@ -1,0 +1,116 @@
+---
+- name: Create myFS resource so we have something to work with
+  community.pacemaker.pacemaker_resource:
+    resource_name: myFS
+    resource_type: FileSystem
+    resource_config:
+      device: 'nfs_server:/export/www'
+      directory: '/www'
+      fstype: 'nfs'
+    resource_group: apache
+    state: present
+  register: myFS
+
+# Test location constraint
+- name: Create a location constraint (check mode)
+  community.pacemaker.pacemaker_constraint:
+    name: myResource
+    type: location
+    prefers:
+      node1:
+      node2:
+      node3:
+  check_mode: yes
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myResource_location' not in pcs.stdout"
+
+- name: Create a location constraint
+  community.pacemaker.pacemaker_constraint:
+    name: myResource
+    type: location
+    prefers:
+      node1:
+      node2:
+      node3:
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myResource_location' in pcs.stdout"
+
+- name: Create a location constraint (again)
+  community.pacemaker.pacemaker_constraint:
+    name: myResource
+    type: location
+    prefers:
+      node1:
+      node2:
+      node3:
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed == False
+
+- name: Remove a location constraint (check mode)
+  community.pacemaker.pacemaker_constraint:
+    name: myResource
+    type: location
+    state: absent
+  check_mode: yes
+
+- assert:
+    that:
+      - constraint.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myResource_location' in pcs.stdout"
+
+- name: Remove a location constraint
+  community.pacemaker.pacemaker_constraint:
+    name: myResource
+    type: location
+    state: absent
+
+- assert:
+    that:
+      - constraint.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myResource_location' in pcs.stdout"
+
+- name: Remove a location constraint (again)
+  community.pacemaker.pacemaker_constraint:
+    name: myResource
+    type: location
+    state: absent
+
+- assert:
+    that:
+      - constraint.changed == False
+# EOF location constraint

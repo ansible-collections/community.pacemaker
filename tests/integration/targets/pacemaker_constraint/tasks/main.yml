@@ -1,0 +1,4 @@
+---
+# main tasks file
+- name: "Import basic tests"
+  import_tasks: 1_basic_tests.yml
