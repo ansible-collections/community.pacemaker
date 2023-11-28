@@ -96,13 +96,17 @@ EXAMPLES = r'''
   community.pacemaker.pacemaker_constraint:
     name: myResource
     type: location
-    prefers: node1
+    prefers:
+      - node1: 500
+      - node2: 200
+      - node3: 100
 
-- name: Create a location constraint to avoid a node
+- name: INFINITY score menas never run on that node
   community.pacemaker.pacemaker_constraint:
     name: myResource
     type: location
-    avoids: node5:
+    avoids:
+      - node5: INFINITY
 
 - name: Start resources in a specific order
   community.pacemaker.pacemaker_constraint:
@@ -214,9 +218,9 @@ def create_constraint(module):
                                                   module.params['name'])
     if constraint_type == "location":
         if 'prefers' in module.params:
-            cmd = "{0} prefers {1}".format(cmd, module.params['prefers'])
+            cmd = "{0} prefers {1}".format(cmd, ' '.join(["{} {}".format(key, value) for d in module.params['prefers'] for key, value in d.items()]))
         elif 'avoids' in module.params:
-            cmd = "{0} avoids {1}".format(cmd, module.params['avoids'])
+            cmd = "{0} avoids {1}".format(cmd, ' '.join(["{} {}".format(key, value) for d in module.params['avoids'] for key, value in d.items()]))
         else:
             module.fail_json(msg="invalid verb with location constraint")
     elif constraint_type == "order":
@@ -251,8 +255,8 @@ def main():
     argument_spec.update(
         name=dict(type='str', required=True),
         type=dict(type='str', choices=["location", "order", "colocation"]),
-        prefers=dict(type='str'),
-        avoids=dict(type='str'),
+        prefers=dict(type='list', elements='raw'),
+        avoids=dict(type='list', elements='raw'),
         ordering=dict(type='list', elements='raw'),
         set=dict(type='list', elemets='str'),
         resources=dict(type='list', elemets='str'),

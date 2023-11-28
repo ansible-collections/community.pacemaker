@@ -16,7 +16,10 @@
   community.pacemaker.pacemaker_constraint:
     name: myResource
     type: location
-    prefers: node1
+    prefers:
+      - node1: 500
+      - node2: 200
+      - node3: 100
     debug: true
   check_mode: true
   register: constraint
@@ -36,7 +39,10 @@
   community.pacemaker.pacemaker_constraint:
     name: myResource
     type: location
-    prefers: node1
+    prefers:
+      - node1: 500
+      - node2: 200
+      - node3: 100
     debug: true
   register: constraint
 
@@ -55,7 +61,10 @@
   community.pacemaker.pacemaker_constraint:
     name: myResource
     type: location
-    prefers: node1
+    prefers:
+      - node1: 500
+      - node2: 200
+      - node3: 100
     debug: true
   register: constraint
 
