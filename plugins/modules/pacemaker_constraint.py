@@ -97,11 +97,9 @@ EXAMPLES = r'''
     name: myResource
     type: location
     prefers:
-      - node1: 500
-      - node2: 200
-      - node3: 100
+      - node1: 100
 
-- name: INFINITY score menas never run on that node
+- name: INFINITY score means never run on that node
   community.pacemaker.pacemaker_constraint:
     name: myResource
     type: location

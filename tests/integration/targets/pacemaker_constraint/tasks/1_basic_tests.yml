@@ -17,9 +17,7 @@
     name: myResource
     type: location
     prefers:
-      - node1: 500
-      - node2: 200
-      - node3: 100
+      - node1: 100
     debug: true
   check_mode: true
   register: constraint
@@ -40,9 +38,7 @@
     name: myResource
     type: location
     prefers:
-      - node1: 500
-      - node2: 200
-      - node3: 100
+      - node1: 100
     debug: true
   register: constraint
 
@@ -62,9 +58,7 @@
     name: myResource
     type: location
     prefers:
-      - node1: 500
-      - node2: 200
-      - node3: 100
+      - node1: 100
     debug: true
   register: constraint
 
