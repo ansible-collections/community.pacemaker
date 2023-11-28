@@ -1,4 +1,10 @@
 ---
+- name: Delete constraint so retries have a chance
+  community.pacemaker.pacemaker_constraint:
+    name: myFS
+    type: location
+    state: absent
+
 - name: Create myFS resource so we have something to work with
   community.pacemaker.pacemaker_resource:
     resource_name: myFS
@@ -72,6 +78,7 @@
     type: location
     state: absent
   check_mode: true
+  register: constraint
 
 - assert:
     that:
@@ -89,6 +96,7 @@
     name: myFS
     type: location
     state: absent
+  register: constraint
 
 - assert:
     that:
@@ -106,6 +114,7 @@
     name: myFS
     type: location
     state: absent
+  register: constraint
 
 - assert:
     that:
