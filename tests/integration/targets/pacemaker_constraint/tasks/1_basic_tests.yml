@@ -20,7 +20,8 @@
       - node1:
       - node2:
       - node3:
-  check_mode: yes
+    debug: true
+  check_mode: true
   register: constraint
 
 - assert:
@@ -42,6 +43,7 @@
       - node1:
       - node2:
       - node3:
+    debug: true
   register: constraint
 
 - assert:
@@ -63,6 +65,7 @@
       - node1:
       - node2:
       - node3:
+    debug: true
   register: constraint
 
 - assert:
@@ -74,7 +77,7 @@
     name: myResource
     type: location
     state: absent
-  check_mode: yes
+  check_mode: true
 
 - assert:
     that:
