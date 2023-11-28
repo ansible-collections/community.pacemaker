@@ -207,14 +207,12 @@ def delete_constraint(module):
     """
     id = get_constraint_id(module)
     status = False
-    cmd = "{0} constraint remove {1}".format(module.params['pcs_util'],
-                                             id)
+    cmd = "{0} constraint remove {1}".format(module.params['pcs_util'], id)
     rc, out, err = module.run_command(cmd)
     if rc == 0:
         status = True
     else:
-        module.fail_json(msg="Failed to delete the constraint {0}: {1}".format(id,
-                                                                               err))
+        module.fail_json(msg="Failed to delete the constraint {0}: {1}".format(id, err))
     return status
 
 
@@ -307,7 +305,7 @@ def main():
         elif state == "absent":
             if exists:
                 if module.check_mode is False:
-                    delete_constraint(constraint_id)
+                    delete_constraint(module)
                 result['changed'] = True
                 result['msg'] = "The constraint {0} was successfully deleted".format(constraint_id)
             else:
