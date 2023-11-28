@@ -277,13 +277,13 @@ def main():
                 result['changed'] = False
                 result['msg'] ="The constraint {0} already exists".format(constraint_id)
             else:
-              if module.check_mode:
-                  create_constraint(module)
-            result['changed'] = True
-            result['msg'] = "The contraint {0} was successfully created".format(constraint_id)
+                if module.check_mode is False:
+                    create_constraint(module)
+                result['changed'] = True
+                result['msg'] = "The contraint {0} was successfully created".format(constraint_id)
         elif state == "absent":
             if exists:
-                if module.check_mode:
+                if module.check_mode is False:
                     delete_constraint(constraint_id)
                 result['changed'] = True
                 result['msg'] = "The constraint {0} was successfully deleted".format(constraint_id)
