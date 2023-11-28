@@ -60,12 +60,20 @@ options:
       - Mutually exclusive with prefers.
     type: list
     elements: raw
-  ordering:
+  order:
     description:
       - Used when the constraint type is order.
       - Specify in which order resources should be started, stopped or otherwise managed.
+      - Mutually exclusive with set.
     type: list
     elements: raw
+  set:
+     description:
+      - Used when the constraint type is order.
+      - Create a chain of ordered resources.
+      - Mutually exclusive with order.
+     type: list
+     elements: str
   resources:
     description:
       - Used when the constraint type is colocation.
@@ -110,7 +118,7 @@ EXAMPLES = r'''
   community.pacemaker.pacemaker_constraint:
     name: myResource
     type: order
-    ordering:
+    order:
       - start: mounts
       - start: mysql
       - start: https
@@ -123,6 +131,15 @@ EXAMPLES = r'''
       - stop: httpd
       - stop: mysql
       - stop: mounts
+
+- name: Create an ordered set of resources
+  community.pacemaker.pacemaker_constraint:
+    name: myResource
+    type: order
+    order:
+      - mounts
+      - mysql
+      - httpd
 
 - name: Colocate resources
   community.pacemaker.pacemaker_constraint:
@@ -218,8 +235,7 @@ def create_constraint(module):
         # These two commands are supposed to work with multiple nodes but don't seem to... perhaps a version thing?
         if 'prefers' in module.params:
             node_config = ' '.join(["{} {}".format(key, value) for d in module.params['prefers'] for key, value in d.items()]).strip()
-            node_config = node_config.replace('\n', ' ')
-            cmd = "{0} prefers {1}".format(cmd, node_config)
+            cmd = "{0} {1}".format(cmd, node_config)
         elif 'avoids' in module.params:
             node_config = ' '.join(["{} {}".format(key, value) for d in module.params['avoids'] for key, value in d.items()]).strip()
             cmd = "{0} avoids {1}".format(cmd, node_config)
@@ -227,8 +243,9 @@ def create_constraint(module):
             module.fail_json(msg="invalid verb with location constraint")
     elif constraint_type == "order":
 
-        if 'ordering' in module.params:
+        if 'order' in module.params:
             module.fail_json(msg="TODO: Functonality not yet implemented")
+            # NOt correct for this task
             cmd = "{0} prefers {1}".format(cmd, ' '.join(["{}={}".format(key, value) for d in module.params['prefers'] for key, value in d.items()]))
         elif 'set' in module.params:
             cmd = "{0} constraint {1} id={2} set {3}".format(module.params['pcs_util'],
