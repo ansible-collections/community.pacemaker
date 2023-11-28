@@ -102,7 +102,7 @@
 
 - assert:
     that:
-      - "'myResource_location' in pcs.stdout"
+      - "'myResource_location' not in pcs.stdout"
 
 - name: Remove a location constraint (again)
   community.pacemaker.pacemaker_constraint:
@@ -113,4 +113,4 @@
 - assert:
     that:
       - constraint.changed == False
-# EOF location constraint
+# EOF location constraint tests
