@@ -180,6 +180,7 @@ import traceback
 def get_constraint_id(module):
     """
     Returns the constraint id that we always want this module to create/manage.
+    TODO - We need to change this is, it is not unique
     """
     return "{0}_{1}".format(module.params['name'], module.params['type'])
 
@@ -237,8 +238,9 @@ def create_constraint(module):
             node_config = ' '.join(["{} {}".format(key, value) for d in module.params['prefers'] for key, value in d.items()]).strip()
             cmd = "{0} {1}".format(cmd, node_config)
         elif 'avoids' in module.params:
+            # The minus turns it into an avoid
             node_config = ' '.join(["{} -{}".format(key, value) for d in module.params['avoids'] for key, value in d.items()]).strip()
-            cmd = "{0} avoids {1}".format(cmd, node_config)
+            cmd = "{0} {1}".format(cmd, node_config)
         else:
             module.fail_json(msg="invalid verb with location constraint")
     elif constraint_type == "order":
