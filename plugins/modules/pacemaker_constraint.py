@@ -93,16 +93,16 @@ EXAMPLES = r'''
     name: myResource
     type: location
     prefers:
-      node1:
-      node2:
-      node3:
+      - node1:
+      - node2:
+      - node3:
 
 - name: Create a location constraint to avoid a node
   community.pacemaker.pacemaker_constraint:
     name: myResource
     type: location
     avoids:
-      node5:
+      - node5:
 
 - name: Start resources in a specific order
   community.pacemaker.pacemaker_constraint:

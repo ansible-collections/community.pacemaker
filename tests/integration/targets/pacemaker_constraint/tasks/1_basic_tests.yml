@@ -17,9 +17,9 @@
     name: myResource
     type: location
     prefers:
-      node1:
-      node2:
-      node3:
+      - node1:
+      - node2:
+      - node3:
   check_mode: yes
   register: constraint
 
@@ -39,9 +39,9 @@
     name: myResource
     type: location
     prefers:
-      node1:
-      node2:
-      node3:
+      - node1:
+      - node2:
+      - node3:
   register: constraint
 
 - assert:
@@ -60,9 +60,9 @@
     name: myResource
     type: location
     prefers:
-      node1:
-      node2:
-      node3:
+      - node1:
+      - node2:
+      - node3:
   register: constraint
 
 - assert:
