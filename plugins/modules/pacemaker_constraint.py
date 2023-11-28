@@ -51,23 +51,27 @@ options:
       - Used when the constraint type is location.
       - Specify which nodes a resource is prefered to run on.
       - Mutually exclusive with avoids.
-    type: dict
+    type: list
+    elements: raw
   avoids:
     description:
       - Used when the constraint type is location.
       - Specifiy which nodes a resource should avoid.
       - Mutually exclusive with prefers.
-    type: dict
+    type: list
+    elements: raw
   ordering:
     description:
       - Used when the constraint type is order.
       - Specify in which order resources should be started, stopped or otherwise managed.
-    type: dict
+    type: list
+    elements: raw
   resources:
     description:
       - Used when the constraint type is colocation.
       - Specifiy which resources should be colocated.
-    type: dict
+    type: list
+    elements: raw
   state:
     description:
       - The desired state of the constraint.
@@ -249,9 +253,9 @@ def main():
     argument_spec.update(
         name=dict(type='str', required=True),
         type=dict(type='str', choices=["location", "order", "colocation"]),
-        prefers=dict(type='dict'),
-        avoids=dict(type='dict'),
-        ordering=dict(type='list', elemets='dict'),
+        prefers=dict(type='list', elements='raw'),
+        avoids=dict(type='list', elements='raw'),
+        ordering=dict(type='list', elements='raw'),
         set=dict(type='list', elemets='str'),
         resources=dict(type='list', elemets='str'),
         state=dict(type='str', choices=["present", "absent"], default="present"),
