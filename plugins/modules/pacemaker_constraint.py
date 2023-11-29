@@ -250,7 +250,7 @@ def create_constraint(module):
             r1_name = res[0][r1_action]
             r2_action = res[1].keys()[0]
             r2_name = res[1][r1_action]
-            cmd = "{0} {1}".format(cmd, "{} {} then {} {}".format(r1_action, r1_name, r2_action, r2_name)
+            cmd = "{0} {1}".format(cmd, "{} {} then {} {}".format(r1_action, r1_name, r2_action, r2_name))
         elif module.params['set']:
             cmd = "{0} constraint {1} id={2} set {3}".format(module.params['pcs_util'],
                                                              constraint_type,
