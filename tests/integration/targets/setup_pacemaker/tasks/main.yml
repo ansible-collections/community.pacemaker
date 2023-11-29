@@ -5,3 +5,9 @@
 
 - name: Import tasks from pcs role
   import_tasks: "{{ playbook_dir }}../../../../../../../../roles/pcs/tasks/main.yml"
+
+- name: Import debug tasks
+  import_tasks: 1_debug_info.yml
+
+- name: Create pacemaker resources for tests
+  import_tasks: 2_create_pacemaker_resources.yml

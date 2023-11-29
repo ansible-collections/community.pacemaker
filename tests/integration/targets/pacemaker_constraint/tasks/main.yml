@@ -1,0 +1,10 @@
+---
+# main tasks file
+- name: "Import basic location constraint tests"
+  import_tasks: 1_basic_location_constraint_tests.yml
+
+- name: "Import basic order constraint tests"
+  import_tasks: 2_basic_order_constraint_tests.yml
+
+- name: "Import basic colocation constraint tests"
+  import_tasks: 3_basic_colocation_constraint_tests.yml

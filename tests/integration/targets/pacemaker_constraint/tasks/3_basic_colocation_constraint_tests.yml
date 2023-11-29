@@ -1,0 +1,103 @@
+---
+- name: Colocate resources (check mode)
+  community.pacemaker.pacemaker_constraint:
+    name: myResources
+    type: colocation
+    resources:
+      - httpd
+      - mysql
+  check_mode: true
+  register: colocation
+
+- assert:
+    that:
+      - colocation.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myResources_colocation' not in pcs.stdout"
+
+- name: Colocate resources
+  community.pacemaker.pacemaker_constraint:
+    name: myResources
+    type: colocation
+    resources:
+      - httpd
+      - mysql
+    debug: true
+  register: colocation
+
+- assert:
+    that:
+      - colocation.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myResources_colocation' in pcs.stdout"
+
+- name: Colocate resources (again)
+  community.pacemaker.pacemaker_constraint:
+    name: myResources
+    type: colocation
+    resources:
+      - httpd
+      - mysql
+  register: colocation
+
+- assert:
+    that:
+      - colocation.changed == False
+
+- name: Delete constraint (check mode)
+  community.pacemaker.pacemaker_constraint:
+    name: myResources
+    type: colocation
+    state: absent
+  check_mode: true
+  register: colocation
+
+- assert:
+    that:
+      - colocation.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myResources_colocation' in pcs.stdout"
+
+- name: Delete constraint
+  community.pacemaker.pacemaker_constraint:
+    name: myResources
+    type: colocation
+    state: absent
+  register: colocation
+
+- assert:
+    that:
+      - colocation.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myResources_colocation' not in pcs.stdout"
+
+- name: Delete constraint (again)
+  community.pacemaker.pacemaker_constraint:
+    name: myResources
+    type: colocation
+    state: absent
+  register: colocation
+
+- assert:
+    that:
+      - colocation.changed == False

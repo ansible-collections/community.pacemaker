@@ -1,0 +1,202 @@
+---
+- name: Check limit on order length
+  community.pacemaker.pacemaker_constraint:
+    name: startResources
+    type: order
+    order:
+      - start: mounts
+      - start: mysql
+      - start: httpd
+    debug: true
+  ignore_errors: true
+  register: order
+
+- assert:
+    that:
+     - order.failed
+     - order.msg == "Use the 'pcs constraint order set' command if you want to create a constraint for more than two resources."
+
+- name: Start resources in a specific order (check mode)
+  community.pacemaker.pacemaker_constraint:
+    name: startResources
+    type: order
+    order:
+      - start: mounts
+      - start: mysql
+    debug: true
+  check_mode: true
+  register: order
+
+- assert:
+    that: order.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'startResources_order' not in pcs.stdout"
+
+- name: Start resources in a specific order
+  community.pacemaker.pacemaker_constraint:
+    name: startResources
+    type: order
+    order:
+      - start: mounts
+      - start: mysql
+    debug: true
+  register: order
+
+- assert:
+    that: order.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'startResources_order' in pcs.stdout"
+
+- name: Start resources in a specific order (again)
+  community.pacemaker.pacemaker_constraint:
+    name: startResources
+    type: order
+    order:
+      - start: mounts
+      - start: mysql
+    debug: true
+  register: order
+
+- assert:
+    that: order.changed == False
+
+- name: Stop resources in a specific order (check mode)
+  community.pacemaker.pacemaker_constraint:
+    name: stopResources
+    type: order
+    order:
+      - stop: mysql
+      - stop: mounts
+    debug: true
+  check_mode: true
+  register: order
+
+- assert:
+    that: order.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'stopResources_order' not in pcs.stdout"
+
+- name: Stop resources in a specific order
+  community.pacemaker.pacemaker_constraint:
+    name: stopResources
+    type: order
+    order:
+      - stop: mysql
+      - stop: mounts
+    debug: true
+  register: order
+
+- assert:
+    that: order.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'stopResources_order' in pcs.stdout"
+
+- name: Stop resources in a specific order (again)
+  community.pacemaker.pacemaker_constraint:
+    name: stopResources
+    type: order
+    order:
+      - stop: mysql
+      - stop: mounts
+    debug: true
+  register: order
+
+- assert:
+    that: order.changed == False
+
+- name: Create an ordered set of resources (check mode)
+  community.pacemaker.pacemaker_constraint:
+    name: resourceSet
+    type: order
+    set:
+      - mounts
+      - mysql
+      - httpd
+    debug: true
+  check_mode: true
+  register: set
+
+- assert:
+    that: set.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'resourceSet_order' not in pcs.stdout"
+
+- name: Create an ordered set of resources
+  community.pacemaker.pacemaker_constraint:
+    name: resourceSet
+    type: order
+    set:
+      - mounts
+      - mysql
+      - httpd
+    debug: true
+  register: set
+
+- assert:
+    that: set.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'resourceSet_order' in pcs.stdout"
+
+- name: Create an ordered set of resources (again)
+  community.pacemaker.pacemaker_constraint:
+    name: resourceSet
+    type: order
+    set:
+      - mounts
+      - mysql
+      - httpd
+    debug: true
+  register: set
+
+- assert:
+    that: set.changed == False
+
+- name: Delete all creates order constraints
+  community.pacemaker.pacemaker_constraint:
+    name: "{{ item }}"
+    type: order
+    state: absent
+    debug: true
+  loop:
+    - startResources
+    - stopResources
+    - resourceSet
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'startResources_order' not in pcs.stdout"
+      - "'stopResources_order' not in pcs.stdout"
+      - "'resourceSet_order' not in pcs.stdout"

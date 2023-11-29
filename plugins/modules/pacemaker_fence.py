@@ -208,7 +208,7 @@ def main():
             excep = traceback.format_exc()
         module.fail_json(msg='Error: %s' % to_native(excep))
 
-    module.exit_json(**result)
+    module.exit_json(**result)  # TODO Remove this or set result dict values above?
 
 
 if __name__ == '__main__':

@@ -1,0 +1,214 @@
+---
+- name: Delete constraint so retries have a chance
+  community.pacemaker.pacemaker_constraint:
+    name: myFS
+    type: location
+    state: absent
+
+# Test location constraint - prefers
+- name: Create a location constraint (check mode)
+  community.pacemaker.pacemaker_constraint:
+    name: myFS
+    type: location
+    prefers:
+      - node1: 100
+    debug: true
+  check_mode: true
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myFS_location' not in pcs.stdout"
+
+- name: Create a location constraint
+  community.pacemaker.pacemaker_constraint:
+    name: myFS
+    type: location
+    prefers:
+      - node1: 100
+    debug: true
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myFS_location' in pcs.stdout"
+
+- name: Create a location constraint (again)
+  community.pacemaker.pacemaker_constraint:
+    name: myFS
+    type: location
+    prefers:
+      - node1: 100
+    debug: true
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed == False
+
+- name: Remove a location constraint (check mode)
+  community.pacemaker.pacemaker_constraint:
+    name: myFS
+    type: location
+    state: absent
+  check_mode: true
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myFS_location' in pcs.stdout"
+
+- name: Remove a location constraint
+  community.pacemaker.pacemaker_constraint:
+    name: myFS
+    type: location
+    state: absent
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myFS_location' not in pcs.stdout"
+
+- name: Remove a location constraint (again)
+  community.pacemaker.pacemaker_constraint:
+    name: myFS
+    type: location
+    state: absent
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed == False
+
+# Test location constraint - avoids
+- name: Create a location constraint (check mode) - avoids
+  community.pacemaker.pacemaker_constraint:
+    name: myFS
+    type: location
+    avoids:
+      - node1: 100
+    debug: true
+  check_mode: true
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myFS_location' not in pcs.stdout"
+
+- name: Create a location constraint - avoids
+  community.pacemaker.pacemaker_constraint:
+    name: myFS
+    type: location
+    avoids:
+      - node1: 100
+    debug: true
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myFS_location' in pcs.stdout"
+
+- name: Create a location constraint (again) - avoids
+  community.pacemaker.pacemaker_constraint:
+    name: myFS
+    type: location
+    avoids:
+      - node1: 100
+    debug: true
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed == False
+
+- name: Remove a location constraint (check mode)
+  community.pacemaker.pacemaker_constraint:
+    name: myFS
+    type: location
+    state: absent
+  check_mode: true
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myFS_location' in pcs.stdout"
+
+- name: Remove a location constraint
+  community.pacemaker.pacemaker_constraint:
+    name: myFS
+    type: location
+    state: absent
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'myFS_location' not in pcs.stdout"
+
+- name: Remove a location constraint (again)
+  community.pacemaker.pacemaker_constraint:
+    name: myFS
+    type: location
+    state: absent
+  register: constraint
+
+- assert:
+    that:
+      - constraint.changed == False
+
+# EOF location constraint tests
