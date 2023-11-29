@@ -58,7 +58,7 @@
     type: order
     order:
       - stop: mysql
-      - start: mounts
+      - stop: mounts
   check_mode: true
   register: order
 
@@ -71,7 +71,7 @@
     type: order
     order:
       - stop: mysql
-      - start: mounts
+      - stop: mounts
   register: order
 
 - assert:
@@ -83,7 +83,7 @@
     type: order
     order:
       - stop: mysql
-      - start: mounts
+      - stop: mounts
   register: order
 
 - assert:

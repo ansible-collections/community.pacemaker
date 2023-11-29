@@ -246,9 +246,9 @@ def create_constraint(module):
     elif constraint_type == "order":
         if module.params['order'] is not None:
             res = module.params['order']  # limited to 2 resources
-            r1_action = res[0].keys()[0]
+            r1_action = list(res[0].keys())[0]
             r1_name = res[0][r1_action]
-            r2_action = res[1].keys()[0]
+            r2_action = list(res[1].keys())[0]
             r2_name = res[1][r1_action]
             cmd = "{0} {1}".format(cmd, "{} {} then {} {}".format(r1_action, r1_name, r2_action, r2_name))
         elif module.params['set']:
