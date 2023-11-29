@@ -188,7 +188,7 @@
     state: absent
     debug: true
   loop:
-    - startResource
+    - startResources
     - stopResources
     - resourceSet
 
