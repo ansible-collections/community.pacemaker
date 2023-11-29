@@ -185,6 +185,7 @@
   community.pacemaker.pacemaker_constraint:
     name: "{{ item }}"
     type: order
+    state: absent
     debug: true
   loop:
     - startResource
