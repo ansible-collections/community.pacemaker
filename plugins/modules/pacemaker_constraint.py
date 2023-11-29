@@ -254,10 +254,10 @@ def create_constraint(module):
             cmd = "{0} {1}".format(cmd, "{} {} then {} {}".format(r1_action, r1_name, r2_action, r2_name))
             cmd = "{0} id={1}".format(cmd, id)
         elif module.params['set']:
-            cmd = "{0} constraint {1} set {2} id={3}".format(module.params['pcs_util'],
-                                                             constraint_type,
-                                                             " ".join(resource for resource in module.params['set']),
-                                                             id)
+            cmd = "{0} constraint {1} set {2} setoptions id={3}".format(module.params['pcs_util'],
+                                                                        constraint_type,
+                                                                        " ".join(resource for resource in module.params['set']),
+                                                                        id)
         else:
             module.fail_json(msg="either the order or set config keys must be provided when type is order")
     elif constraint_type == "colocation":
