@@ -79,7 +79,7 @@ options:
       - Used when the constraint type is colocation.
       - Specifiy which resources should be colocated.
     type: list
-    elements: raw
+    elements: str
   state:
     description:
       - The desired state of the constraint.
@@ -176,6 +176,7 @@ from ansible_collections.community.pacemaker.plugins.module_utils.pacemaker_opti
 import traceback
 
 # TODO Refactor to common and add unit tests?
+
 
 def get_constraint_id(module):
     """
@@ -282,13 +283,13 @@ def create_constraint(module):
 def main():
     argument_spec = pacemaker_common_argument_spec()
     argument_spec.update(
-        name=dict(type='str', required=True),
-        type=dict(type='str', choices=["location", "order", "colocation"]),
+        name=dict(type='str', required=True, aliases=["constraint_name"]),
+        type=dict(type='str', choices=["location", "order", "colocation"], aliases=["constraint_type"]),
         prefers=dict(type='list', elements='raw'),
         avoids=dict(type='list', elements='raw'),
         order=dict(type='list', elements='raw'),
-        set=dict(type='list', elemets='str'),
-        resources=dict(type='list', elemets='str'),
+        set=dict(type='list', elements='str'),
+        resources=dict(type='list', elements='str'),
         state=dict(type='str', choices=["present", "absent"], default="present"),
         local=dict(type='bool', default=False),
     )
@@ -309,7 +310,7 @@ def main():
         if state == "present":
             if exists:
                 result['changed'] = False
-                result['msg'] ="The constraint {0} already exists".format(constraint_id)
+                result['msg'] = "The constraint {0} already exists".format(constraint_id)
             else:
                 if module.check_mode is False:
                     create_constraint(module)
