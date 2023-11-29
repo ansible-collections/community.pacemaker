@@ -1,5 +1,5 @@
 ---
-- name: Start resources in a specific order (check mode)
+- name: Check limit on order length
   community.pacemaker.pacemaker_constraint:
     name: startResources
     type: order
@@ -7,6 +7,21 @@
       - start: mounts
       - start: mysql
       - start: httpd
+  ignore_errors: false
+  register: order
+
+- assert:
+    that:
+     - order.failed
+     - order.msg == "Use the 'pcs constraint order set' command if you want to create a constraint for more than two resources."
+
+- name: Start resources in a specific order (check mode)
+  community.pacemaker.pacemaker_constraint:
+    name: startResources
+    type: order
+    order:
+      - start: mounts
+      - start: mysql
   check_mode: true
   register: order
 
@@ -20,7 +35,6 @@
     order:
       - start: mounts
       - start: mysql
-      - start: httpd
   register: order
 
 - assert:
@@ -33,7 +47,6 @@
     order:
       - start: mounts
       - start: mysql
-      - start: httpd
   register: order
 
 - assert:
@@ -44,9 +57,8 @@
     name: stopResources
     type: order
     order:
+      - stop: mysql
       - start: mounts
-      - start: mysql
-      - start: httpd
   check_mode: true
   register: order
 
@@ -58,22 +70,20 @@
     name: stopResources
     type: order
     order:
+      - stop: mysql
       - start: mounts
-      - start: mysql
-      - start: httpd
   register: order
 
 - assert:
     that: order.changed
 
-- name: Stopresources in a specific order (again)
+- name: Stop resources in a specific order (again)
   community.pacemaker.pacemaker_constraint:
     name: stopResources
     type: order
     order:
+      - stop: mysql
       - start: mounts
-      - start: mysql
-      - start: httpd
   register: order
 
 - assert:

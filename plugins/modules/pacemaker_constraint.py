@@ -244,18 +244,20 @@ def create_constraint(module):
         else:
             module.fail_json(msg="invalid verb with location constraint")
     elif constraint_type == "order":
-
         if module.params['order'] is not None:
-            module.fail_json(msg="TODO: Functonality not yet implemented")
-            # NOt correct for this task
-            cmd = "{0} prefers {1}".format(cmd, ' '.join(["{}={}".format(key, value) for d in module.params['prefers'] for key, value in d.items()]))
+            res = module.params['order']  # limited to 2 resources
+            r1_action = res[0].keys()[0]
+            r1_name = res[0][r1_action]
+            r2_action = res[1].keys()[0]
+            r2_name = res[1][r1_action]
+            cmd = "{0} {1}".format(cmd, "{} {} then {} {}".format(r1_action, r1_name, r2_action, r2_name)
         elif module.params['set']:
             cmd = "{0} constraint {1} id={2} set {3}".format(module.params['pcs_util'],
                                                              constraint_type,
                                                              id,
                                                              " ".join(resource for resource in module.params['set']))
         else:
-            module.fail_json(msg="the ordering config key must be provided when type is order")
+            module.fail_json(msg="either the order or kset config keys must be provided when type is order")
     elif constraint_type == "colocation":
         if module.params['resources']:
             cmd = "{0} {1}".format(cmd, " with ".join(resource for resource in module.params['resources']))
@@ -292,6 +294,9 @@ def main():
     )
     result = {}
     state = module.params["state"]
+
+    if len(module.params['order']) > 2:
+        module.fail_json(msg="Use the 'pcs constraint order set' command if you want to create a constraint for more than two resources.")
 
     try:
         constraint_id = get_constraint_id(module)
