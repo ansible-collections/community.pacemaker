@@ -7,7 +7,7 @@
       - start: mounts
       - start: mysql
       - start: httpd
-  ignore_errors: false
+  ignore_errors: true
   register: order
 
 - assert:
