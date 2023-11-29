@@ -1,0 +1,45 @@
+---
+- name: Create myFS resource
+  community.pacemaker.pacemaker_resource:
+    resource_name: myFS
+    resource_type: FileSystem
+    resource_config:
+      device: 'nfs_server:/export/www'
+      directory: '/www'
+      fstype: 'nfs'
+    resource_group: apache
+    state: present
+
+- name: Create httpd resource
+  community.pacemaker.pacemaker_resource:
+    resource_name: httpd
+    resource_type: ocf:heartbeat:apache
+    resource_config:
+      configfile: /etc/httpd/conf/httpd.conf
+      statusurl: "http://localhost/server-status"
+    resource_group: apache
+    state: present
+
+- name: Create mysql resource
+  community.pacemaker.pacemaker_resource:
+    resource_name: mysql
+    resource_type: ocf:heartbeat:mysql
+    resource_config:
+      binary: "/usr/bin/mysqld_safe"
+      config: "/etc/my.cnf"
+      datadir: "/var/lib/mysql"
+      pid: "/var/lib/mysql/mysql.pid"
+      socket: "/var/lib/mysql/mysql.sock"
+      additional_parameters: "--bind-address=0.0.0.0"
+      #op start timeout=60s # add raw args param for these?
+      #op stop timeout=60s
+      #op monitor interval=20s timeout=30s
+
+- name: Create mounts
+  community.pacemaker.pacemaker_resource:
+    resource_name: mounts
+    resource_type: FileSystem
+    resource_config:
+      device: /dev/drbd0
+      directory: /var/lib/mysql
+      fytype: ext4

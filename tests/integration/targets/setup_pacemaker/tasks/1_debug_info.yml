@@ -1,0 +1,10 @@
+- name: What version of pacemaker are we running?
+  shell: pcs --version
+
+- name: What version of python3 are we running?
+  shell: python3 --version
+  ignore_errors: true
+
+- name: What version of python are we running?
+  shell: python --version
+  ignore_errors: true

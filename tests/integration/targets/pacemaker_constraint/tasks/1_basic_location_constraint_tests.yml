@@ -5,18 +5,6 @@
     type: location
     state: absent
 
-- name: Create myFS resource so we have something to work with
-  community.pacemaker.pacemaker_resource:
-    resource_name: myFS
-    resource_type: FileSystem
-    resource_config:
-      device: 'nfs_server:/export/www'
-      directory: '/www'
-      fstype: 'nfs'
-    resource_group: apache
-    state: present
-  register: myFS
-
 # Test location constraint - prefers
 - name: Create a location constraint (check mode)
   community.pacemaker.pacemaker_constraint:
