@@ -257,7 +257,7 @@ def create_constraint(module):
                                                              id,
                                                              " ".join(resource for resource in module.params['set']))
         else:
-            module.fail_json(msg="either the order or kset config keys must be provided when type is order")
+            module.fail_json(msg="either the order or set config keys must be provided when type is order")
     elif constraint_type == "colocation":
         if module.params['resources']:
             cmd = "{0} {1}".format(cmd, " with ".join(resource for resource in module.params['resources']))
@@ -295,7 +295,7 @@ def main():
     result = {}
     state = module.params["state"]
 
-    if len(module.params['order']) > 2:
+    if len(module.params['order'] or []) > 2:
         module.fail_json(msg="Use the 'pcs constraint order set' command if you want to create a constraint for more than two resources.")
 
     try:
