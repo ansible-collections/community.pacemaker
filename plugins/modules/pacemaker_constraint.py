@@ -264,7 +264,7 @@ def create_constraint(module):
         if module.params['resources']:
             cmd = "{0} constraint colocation add".format(module.params['pcs_util'])
             cmd = "{0} {1}".format(cmd, " with ".join(resource for resource in module.params['resources']))
-            cmd = "{0} id=".format(cmd, id)
+            cmd = "{0} id={1}".format(cmd, id)
         else:
             module.fail_json(msg="the resources config key must be provided when type is order")
 
