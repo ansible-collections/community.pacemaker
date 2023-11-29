@@ -236,11 +236,11 @@ def create_constraint(module):
         # Had to remove the prefers and avoids keywords... these are documented in the help for v0.9.169 but don't seem to work
         # revisit this when we upgrade to a newer version?
         if module.params['prefers'] is not None:
-            node_config = ' '.join(["{} {}".format(key, value) for d in module.params['prefers'] for key, value in d.items()]).strip()
+            node_config = ' '.join(["{0} {1}".format(key, value) for d in module.params['prefers'] for key, value in d.items()]).strip()
             cmd = "{0} {1}".format(cmd, node_config)
         elif module.params['avoids'] is not None:
             # The minus turns it into an avoid
-            node_config = ' '.join(["{} -{}".format(key, value) for d in module.params['avoids'] for key, value in d.items()]).strip()
+            node_config = ' '.join(["{0} -{1}".format(key, value) for d in module.params['avoids'] for key, value in d.items()]).strip()
             cmd = "{0} {1}".format(cmd, node_config)
         else:
             module.fail_json(msg="invalid verb with location constraint")
@@ -252,7 +252,7 @@ def create_constraint(module):
             r2_action = list(res[1].keys())[0]
             r2_name = res[1][r1_action]
             cmd = "{0} constraint order".format(module.params['pcs_util'])
-            cmd = "{0} {1}".format(cmd, "{} {} then {} {}".format(r1_action, r1_name, r2_action, r2_name))
+            cmd = "{0} {1}".format(cmd, "{0} {1} then {2} {3}".format(r1_action, r1_name, r2_action, r2_name))
             cmd = "{0} id={1}".format(cmd, id)
         elif module.params['set']:
             cmd = "{0} constraint {1} set {2} setoptions id={3}".format(module.params['pcs_util'],
