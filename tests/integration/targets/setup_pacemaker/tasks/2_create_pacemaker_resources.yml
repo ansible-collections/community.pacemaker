@@ -42,4 +42,4 @@
     resource_config:
       device: /dev/drbd0
       directory: /var/lib/mysql
-      fytype: ext4
+      fstype: ext4
