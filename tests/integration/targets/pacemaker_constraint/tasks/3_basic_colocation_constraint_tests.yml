@@ -58,6 +58,7 @@
   community.pacemaker.pacemaker_constraint:
     name: myResources
     type: colocation
+    state: absent
   check_mode: true
   register: colocation
 
@@ -76,6 +77,7 @@
   community.pacemaker.pacemaker_constraint:
     name: myResources
     type: colocation
+    state: absent
   register: colocation
 
 - assert:
@@ -93,6 +95,7 @@
   community.pacemaker.pacemaker_constraint:
     name: myResources
     type: colocation
+    state: absent
   register: colocation
 
 - assert:
