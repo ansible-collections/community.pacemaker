@@ -116,7 +116,7 @@ EXAMPLES = r'''
 
 - name: Start resources in a specific order
   community.pacemaker.pacemaker_constraint:
-    name: myResource
+    name: startResources
     type: order
     order:
       - start: mounts
@@ -125,7 +125,7 @@ EXAMPLES = r'''
 
 - name: Stop resources in a specific order
   community.pacemaker.pacemaker_constraint:
-    name: myResource
+    name: stopResources
     type: order
     order:
       - stop: httpd
@@ -134,9 +134,9 @@ EXAMPLES = r'''
 
 - name: Create an ordered set of resources
   community.pacemaker.pacemaker_constraint:
-    name: myResource
+    name: resourceSet
     type: order
-    order:
+    set:
       - mounts
       - mysql
       - httpd
@@ -280,7 +280,7 @@ def main():
         type=dict(type='str', choices=["location", "order", "colocation"]),
         prefers=dict(type='list', elements='raw'),
         avoids=dict(type='list', elements='raw'),
-        ordering=dict(type='list', elements='raw'),
+        order=dict(type='list', elements='raw'),
         set=dict(type='list', elemets='str'),
         resources=dict(type='list', elemets='str'),
         state=dict(type='str', choices=["present", "absent"], default="present"),
