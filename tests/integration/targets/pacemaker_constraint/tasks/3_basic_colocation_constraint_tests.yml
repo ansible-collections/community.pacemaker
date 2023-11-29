@@ -27,6 +27,7 @@
     resources:
       - httpd
       - mysql
+    debug: true
   register: colocation
 
 - assert:
