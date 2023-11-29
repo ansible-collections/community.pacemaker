@@ -7,6 +7,7 @@
       - start: mounts
       - start: mysql
       - start: httpd
+    debug: true
   ignore_errors: true
   register: order
 
@@ -22,6 +23,7 @@
     order:
       - start: mounts
       - start: mysql
+    debug: true
   check_mode: true
   register: order
 
@@ -42,6 +44,7 @@
     order:
       - start: mounts
       - start: mysql
+    debug: true
   register: order
 
 - assert:
@@ -74,6 +77,7 @@
     order:
       - stop: mysql
       - stop: mounts
+    debug: true
   check_mode: true
   register: order
 
@@ -94,6 +98,7 @@
     order:
       - stop: mysql
       - stop: mounts
+    debug: true
   register: order
 
 - assert:
@@ -113,6 +118,7 @@
     order:
       - stop: mysql
       - stop: mounts
+    debug: true
   register: order
 
 - assert:
@@ -126,6 +132,7 @@
       - mounts
       - mysql
       - httpd
+    debug: true
   check_mode: true
   register: set
 
@@ -147,6 +154,7 @@
       - mounts
       - mysql
       - httpd
+    debug: true
   register: set
 
 - assert:
@@ -167,6 +175,7 @@
       - mounts
       - mysql
       - httpd
+    debug: true
   register: set
 
 - assert:
@@ -176,6 +185,7 @@
   community.pacemaker.pacemaker_constraint:
     name: "{{ item }}"
     type: order
+    debug: true
   loop:
     - startResource
     - stopResources
