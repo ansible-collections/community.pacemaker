@@ -28,6 +28,13 @@
 - assert:
     that: order.changed
 
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'startResources_order' not in pcs.stdout"
+
 - name: Start resources in a specific order
   community.pacemaker.pacemaker_constraint:
     name: startResources
@@ -40,6 +47,13 @@
 - assert:
     that: order.changed
 
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'startResources_order' in pcs.stdout"
+
 - name: Start resources in a specific order (again)
   community.pacemaker.pacemaker_constraint:
     name: startResources
@@ -47,6 +61,7 @@
     order:
       - start: mounts
       - start: mysql
+    debug: true
   register: order
 
 - assert:
@@ -65,6 +80,13 @@
 - assert:
     that: order.changed
 
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'stopResources_order' not in pcs.stdout"
+
 - name: Stop resources in a specific order
   community.pacemaker.pacemaker_constraint:
     name: stopResources
@@ -76,6 +98,13 @@
 
 - assert:
     that: order.changed
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'stopResources_order' in pcs.stdout"
 
 - name: Stop resources in a specific order (again)
   community.pacemaker.pacemaker_constraint:
@@ -103,6 +132,13 @@
 - assert:
     that: set.changed
 
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'resourceSet_order' not in pcs.stdout"
+
 - name: Create an ordered set of resources
   community.pacemaker.pacemaker_constraint:
     name: resourceSet
@@ -116,6 +152,13 @@
 - assert:
     that: set.changed
 
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'resourceSet_order' in pcs.stdout"
+
 - name: Create an ordered set of resources (again)
   community.pacemaker.pacemaker_constraint:
     name: resourceSet
@@ -128,3 +171,21 @@
 
 - assert:
     that: set.changed == False
+
+- name: Delete all creates order constraints
+  community.pacemaker.pacemaker_constraint:
+    name: "{{ item }}"
+    type: order
+  loop:
+    - startResource
+    - stopResources
+    - resourceSet
+
+- shell: pcs constraint list --full
+  register: pcs
+
+- assert:
+    that:
+      - "'startResources_order' not in pcs.stdout"
+      - "'stopResources_order' not in pcs.stdout"
+      - "'resourceSet_order' not in pcs.stdout"
