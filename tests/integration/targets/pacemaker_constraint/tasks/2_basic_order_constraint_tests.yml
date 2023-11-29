@@ -1,0 +1,120 @@
+---
+- name: Start resources in a specific order (check mode)
+  community.pacemaker.pacemaker_constraint:
+    name: startResources
+    type: order
+    order:
+      - start: mounts
+      - start: mysql
+      - start: httpd
+  check_mode: true
+  register: order
+
+- assert:
+    that: order.changed
+
+- name: Start resources in a specific order
+  community.pacemaker.pacemaker_constraint:
+    name: startResources
+    type: order
+    order:
+      - start: mounts
+      - start: mysql
+      - start: httpd
+  register: order
+
+- assert:
+    that: order.changed
+
+- name: Start resources in a specific order (again)
+  community.pacemaker.pacemaker_constraint:
+    name: startResources
+    type: order
+    order:
+      - start: mounts
+      - start: mysql
+      - start: httpd
+  register: order
+
+- assert:
+    that: order.changed == False
+
+- name: Stop resources in a specific order (check mode)
+  community.pacemaker.pacemaker_constraint:
+    name: stopResources
+    type: order
+    order:
+      - start: mounts
+      - start: mysql
+      - start: httpd
+  check_mode: true
+  register: order
+
+- assert:
+    that: order.changed
+
+- name: Stop resources in a specific order
+  community.pacemaker.pacemaker_constraint:
+    name: stopResources
+    type: order
+    order:
+      - start: mounts
+      - start: mysql
+      - start: httpd
+  register: order
+
+- assert:
+    that: order.changed
+
+- name: Stopresources in a specific order (again)
+  community.pacemaker.pacemaker_constraint:
+    name: stopResources
+    type: order
+    order:
+      - start: mounts
+      - start: mysql
+      - start: httpd
+  register: order
+
+- assert:
+    that: order.changed == False
+
+- name: Create an ordered set of resources (check mode)
+  community.pacemaker.pacemaker_constraint:
+    name: resourceSet
+    type: order
+    set:
+      - mounts
+      - mysql
+      - httpd
+  check_mode: true
+  register: set
+
+- assert:
+    that: set.changed
+
+- name: Create an ordered set of resources
+  community.pacemaker.pacemaker_constraint:
+    name: resourceSet
+    type: order
+    set:
+      - mounts
+      - mysql
+      - httpd
+  register: set
+
+- assert:
+    that: set.changed
+
+- name: Create an ordered set of resources (again)
+  community.pacemaker.pacemaker_constraint:
+    name: resourceSet
+    type: order
+    set:
+      - mounts
+      - mysql
+      - httpd
+  register: set
+
+- assert:
+    that: set.changed == False

@@ -121,7 +121,7 @@ EXAMPLES = r'''
     order:
       - start: mounts
       - start: mysql
-      - start: https
+      - start: httpd
 
 - name: Stop resources in a specific order
   community.pacemaker.pacemaker_constraint:
